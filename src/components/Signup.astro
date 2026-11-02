@@ -1,0 +1,18 @@
+---
+import { site } from '../lib/content';
+interface Props { id: string }
+const { id } = Astro.props;
+---
+
+<form class="signup" method="post" action={site.signup.action} data-signup>
+  <p class="label" id={`${id}-consent`}>
+    by signing up you agree to get emails from {site.brand.name}. we'll email you to confirm. unsubscribe in any message.
+    <a href="/privacy">privacy</a>
+  </p>
+  <div class="signup__row">
+    <label class="sr-only" for={`${id}-email`}>email address</label>
+    <input id={`${id}-email`} type="email" name="email_address" placeholder="you@email.com" autocomplete="email" required maxlength="254" aria-describedby={`${id}-consent`} />
+    <button class="btn btn--primary" type="submit" data-decode>Get the next one</button>
+  </div>
+  <p class="signup__status" role="status" data-status></p>
+</form>

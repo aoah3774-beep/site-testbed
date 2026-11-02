@@ -1,0 +1,47 @@
+---
+import { site } from '../lib/content';
+import Player from './Player.astro';
+import Gallery from './Gallery.astro';
+
+const { latest } = site;
+const embedUrl = latest?.embed
+  ? latest.embed.provider === 'spotify'
+    ? `https://open.spotify.com/embed/${latest.embed.id}`
+    : `https://www.youtube-nocookie.com/embed/${latest.embed.id}`
+  : '';
+---
+
+<section class="section" id="music" aria-labelledby="music-h">
+  <h2 id="music-h" data-glitch>music</h2>
+  {
+    !latest ? (
+      <p class="label">first drop incoming.</p>
+    ) : (
+      <>
+        <p class="label">latest</p>
+        <div class="latest">
+          <div class="raw"><img src={latest.cover} alt={`${latest.title} cover`} width="600" height="600" loading="lazy" decoding="async" /></div>
+          <div class="latest__body">
+            <h3>{latest.title}</h3>
+            {latest.audio && <Player src={latest.audio} label={latest.title} />}
+            {
+              latest.links.length > 0 && (
+                <div class="links">
+                  {latest.links.map((l) => <a class="btn" href={l.url} target="_blank" rel="noopener noreferrer" data-decode>{l.label}</a>)}
+                </div>
+              )
+            }
+            {
+              embedUrl && latest.embed && (
+                <div class="embed-slot" data-embed-slot>
+                  <button class="btn" type="button" data-embed={embedUrl} data-provider={latest.embed.provider}>load {latest.embed.provider} player</button>
+                </div>
+              )
+            }
+          </div>
+        </div>
+        <Gallery />
+      </>
+    )
+  }
+</section>

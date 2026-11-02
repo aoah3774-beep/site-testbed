@@ -1,0 +1,15 @@
+---
+import { site } from '../lib/content';
+---
+
+<footer class="footer">
+  <div class="footer__in">
+    <nav class="footer__links" aria-label="social">
+      {site.socials.map((s) => <a href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a>)}
+      <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+      <a href={site.links.soundPacks} target="_blank" rel="noopener noreferrer">Sound packs</a>
+    </nav>
+    <p>snippets are previews only. not licensed.</p>
+    <p>{site.brand.imprint} / <a href="/privacy">privacy</a></p>
+  </div>
+</footer>

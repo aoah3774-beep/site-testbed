@@ -1,0 +1,18 @@
+---
+import { site } from '../lib/content';
+const items = site.gallery;
+---
+
+{
+  items.length > 0 && (
+    <div class="gallery" data-gallery aria-label="releases and beats">
+      <div class="ring" style={`--n:${items.length}`}>
+        {items.map((g, i) => (
+          <a class="raw" href={g.link} target="_blank" rel="noopener noreferrer" style={`--i:${i}`} aria-label={g.title}>
+            <img src={g.image} alt={g.title} width="400" height="400" loading="lazy" decoding="async" draggable="false" />
+          </a>
+        ))}
+      </div>
+    </div>
+  )
+}

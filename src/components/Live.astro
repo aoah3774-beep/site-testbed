@@ -1,0 +1,18 @@
+---
+import { site, fmtFallback } from '../lib/content';
+const { isLive, url, nextStream } = site.live;
+const showLive = isLive && url;
+---
+
+{
+  (showLive || nextStream) && (
+    <section class="section" id="live" aria-labelledby="live-h" data-until={!showLive && nextStream ? nextStream : undefined}>
+      <h2 id="live-h" data-glitch>live</h2>
+      {showLive ? (
+        <a class="badge" href={url} target="_blank" rel="noopener noreferrer">live now</a>
+      ) : (
+        <p class="label">next stream: <time datetime={nextStream} data-local>{fmtFallback(nextStream)}</time></p>
+      )}
+    </section>
+  )
+}

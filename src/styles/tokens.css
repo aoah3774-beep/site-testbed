@@ -1,0 +1,19 @@
+:root {
+  /* palette: ~90% dark neutrals, one pop color per section */
+  --void: #0d0b0a;
+  --soot: #1a1613;
+  --ash: #8a8580;
+  --bone: #e8dfd0;
+  --ember: #d9692a;
+  --crimson: #9c1f1f;
+  --gold: #d8a93a;
+  --line: rgb(138 133 128 / 0.25);
+
+  --font-display: 'Cormorant Garamond', 'IM Fell English', Georgia, serif;
+  --font-ui: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --pad: clamp(1.25rem, 5vw, 4rem);
+  --max: 72rem;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --slow: 800ms;
+}

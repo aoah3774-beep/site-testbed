@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import OnTheTable from '../components/OnTheTable.astro';
+import Packs from '../components/Packs.astro';
+import Music from '../components/Music.astro';
+import Live from '../components/Live.astro';
+import Work from '../components/Work.astro';
+import Signup from '../components/Signup.astro';
+import Footer from '../components/Footer.astro';
+import Inquiry from '../components/Inquiry.astro';
+import { site } from '../lib/content';
+
+const { live } = site;
+const dots = [
+  ['top', 'top'],
+  ['table', 'on the table'],
+  ...(site.packs ? [['packs', 'sound packs']] : []),
+  ['music', 'music'],
+  ...((live.isLive && live.url) || live.nextStream ? [['live', 'live']] : []),
+  ['work', 'work with me'],
+  ['list', 'email list'],
+];
+---
+
+<Base>
+  <Hero />
+  <main id="main">
+    <OnTheTable />
+    <hr class="rule" />
+    <Packs />
+    <hr class="rule" />
+    <Music />
+    <Live />
+    <hr class="rule" />
+    <Work />
+    <section class="section" id="list" aria-labelledby="list-h">
+      <h2 id="list-h" data-glitch>email list</h2>
+      <p class="label">next beat, before it's posted.</p>
+      <Signup id="signup-list" />
+    </section>
+  </main>
+  <Footer />
+  <Inquiry />
+  <button class="mute" type="button" data-mute aria-pressed="false" hidden>sound on</button>
+  <nav class="dots" aria-label="sections">
+    {dots.map(([id, name]) => <a href={`#${id}`} aria-label={name}></a>)}
+  </nav>
+</Base>

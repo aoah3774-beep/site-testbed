@@ -1,0 +1,18 @@
+---
+import { mailto } from '../lib/content';
+
+const topics = [
+  { line: 'beats and exclusives.', cta: 'Buy a beat', subject: 'beat / exclusive', body: 'which beat, and what you need:\n' },
+  { line: 'collabs.', cta: 'Collab', subject: 'collab', body: 'who you are, links, what you have in mind:\n' },
+  { line: 'mixing and mastering.', cta: 'Mix and master', subject: 'mix and master', body: 'project, track count, deadline, links:\n' },
+];
+---
+
+<section class="section" id="work" aria-labelledby="work-h">
+  <h2 id="work-h" data-glitch>work with me</h2>
+  <p class="label">rap. produce. mix. master.</p>
+  <div class="work">{topics.map((t) => <p>{t.line}</p>)}</div>
+  <div class="links">
+    {topics.map((t) => <a class="btn" href={mailto(t.subject, t.body)} data-inquiry data-subject={t.subject} data-body={t.body} data-decode>{t.cta}</a>)}
+  </div>
+</section>

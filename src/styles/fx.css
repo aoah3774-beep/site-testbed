@@ -1,0 +1,63 @@
+/* Style and motion layer. Everything here is cosmetic and removable:
+   switch an effect off in site.yaml (fx:) or delete its rules. */
+
+/* grain: one pre-rendered tile, stepped animation, never computed live */
+.grain { position: fixed; inset: -50%; z-index: 50; pointer-events: none; background: url('/grain.png'); opacity: 0.07; will-change: transform; }
+@media (prefers-reduced-motion: no-preference) { .grain { animation: grain 0.9s steps(6) infinite; } }
+@keyframes grain {
+  0% { transform: translate(0, 0); } 17% { transform: translate(-6%, 4%); } 34% { transform: translate(5%, -7%); }
+  51% { transform: translate(-3%, 8%); } 68% { transform: translate(7%, 2%); } 85% { transform: translate(-8%, -5%); } 100% { transform: translate(0, 0); }
+}
+
+/* raw covers: gritty and desaturated, blooming to color on hover/tap, misregistered edges */
+[data-fx~='grain'] .raw img { filter: grayscale(0.7) contrast(1.25) brightness(0.9); box-shadow: 2px 0 0 rgb(156 31 31 / 0.55), -2px 0 0 rgb(217 105 42 / 0.4); transition: filter var(--slow) var(--ease), box-shadow var(--slow) var(--ease); }
+[data-fx~='grain'] .raw:is(:hover, :focus-within, :active) img { filter: none; box-shadow: none; }
+
+/* hero motion */
+@media (prefers-reduced-motion: no-preference) {
+  .hero__art img { animation: zoom 40s ease-in-out infinite alternate; transform-origin: 50% 40%; }
+  .hero__emblem { animation: float 8s ease-in-out infinite; }
+}
+@keyframes zoom { to { scale: 1.08; } }
+@keyframes float { 50% { translate: 0 -10px; } }
+[data-fx~='parallax'] .hero__art img { translate: calc(var(--px, 0) * -14px) calc(var(--py, 0) * -10px); transition: translate 0.6s var(--ease); }
+[data-fx~='parallax'] .hero__emblem { margin-left: calc(var(--px, 0) * 12px); margin-top: calc(var(--py, 0) * 8px); }
+
+/* reveals: below-the-fold sections fade in on entry (class added by JS, so no-JS stays visible) */
+.will-reveal { opacity: 0; transform: translateY(14px); }
+.will-reveal.in { opacity: 1; transform: none; transition: opacity 900ms var(--ease), transform 900ms var(--ease); }
+
+/* glitch: one short flash per trigger (JS limits triggers to <3 per second) */
+.glitch-run { animation: glitch 240ms steps(1) 1; }
+@keyframes glitch {
+  0%, 100% { transform: none; text-shadow: none; }
+  30%, 70% { transform: translateX(-3px) skewX(-3deg); text-shadow: 3px 0 var(--crimson), -3px 0 var(--ember); }
+}
+
+/* clock: faint flicker each tick, crimson glow in the final minute */
+@media (prefers-reduced-motion: no-preference) {
+  .clock[data-t='0'] { animation: flick-a 0.35s steps(2) 1; }
+  .clock[data-t='1'] { animation: flick-b 0.35s steps(2) 1; }
+}
+@keyframes flick-a { 0%, 100% { opacity: 1; } 40% { opacity: 0.82; } }
+@keyframes flick-b { 0%, 100% { opacity: 1; } 40% { opacity: 0.82; } }
+.clock.final { text-shadow: 0 0 6px rgb(156 31 31 / 0.95), 0 0 22px rgb(156 31 31 / 0.75); }
+
+/* cursor: crosshair + short ember trail (fine pointers only) */
+@media (hover: hover) and (pointer: fine) { html[data-fx~='cursor'] { cursor: crosshair; } }
+.trail { position: fixed; left: 0; top: 0; z-index: 60; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: var(--ember); pointer-events: none; will-change: transform; }
+
+/* embers canvas */
+.embers { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* follow dropdown: wipe open with one glitch flash, items stagger in */
+@media (prefers-reduced-motion: no-preference) {
+  .follow[open] .follow__menu { animation: menu-in 420ms var(--ease) both, glitch 240ms steps(1) 1; }
+  .follow[open] li { animation: item-in 420ms var(--ease) both; animation-delay: calc(var(--k) * 45ms + 120ms); }
+}
+@keyframes menu-in { from { clip-path: inset(0 0 100% 0); opacity: 0; } to { clip-path: inset(0); opacity: 1; } }
+@keyframes item-in { from { opacity: 0; translate: 0 -6px; } to { opacity: 1; translate: 0; } }
+
+/* helix: On the table becomes one centered column whose cards orbit as you scroll (src/fx/helix.ts) */
+.table.is-helix { position: relative; grid-template-columns: 1fr; max-width: 40rem; margin-inline: auto; gap: 3.5rem; }
+.is-helix .card { will-change: transform, opacity; }

@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../lib/content';
+---
+
+<Base title={`privacy / ${site.brand.name}`} description={`privacy notice for ${site.brand.name}`}>
+  <main id="main" class="prose">
+    <p class="label"><a href="/">&larr; back</a></p>
+    <h1>privacy</h1>
+    <p class="label">draft, last updated 2026-11-02. operator: {site.site.legalName}. contact: {site.contact.email}</p>
+
+    <h2>what this site collects</h2>
+    <ul>
+      <li><strong>email list.</strong> if you sign up, your email address goes to our email provider (Kit), who sends the messages. we use it only to send you {site.brand.name} news and drops. we email you to confirm first, and every message has an unsubscribe link.</li>
+      <li><strong>analytics.</strong> if enabled, Cloudflare Web Analytics counts visits and which page or link brought you. it does not use cookies or track you across sites.</li>
+      <li><strong>messages.</strong> the contact buttons open your own email app or Instagram. we only see what you send us.</li>
+    </ul>
+
+    <h2>third parties</h2>
+    <p>streaming players (Spotify, YouTube) load only after you tap them. once loaded, they may set their own cookies under their own policies. links to other sites are covered by those sites' policies.</p>
+
+    <h2>your choices</h2>
+    <p>unsubscribe from any email, or write to {site.contact.email} to see, fix, or delete your data. we keep your email only while you stay subscribed.</p>
+  </main>
+</Base>

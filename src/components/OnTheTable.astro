@@ -1,0 +1,50 @@
+---
+import { site, mailto, fmtFallback } from '../lib/content';
+import Player from './Player.astro';
+import Signup from './Signup.astro';
+
+const beats = site.onTheTable;
+---
+
+<section class="section" id="table" aria-labelledby="table-h">
+  <h2 id="table-h" data-glitch>on the table</h2>
+  {
+    beats.length === 0 ? (
+      <div class="empty">
+        <p>next beat drops soon.</p>
+        <Signup id="signup-table" />
+      </div>
+    ) : (
+      <>
+        <p class="label">beats up for grabs. claim it or it's mine.</p>
+        <div class="table">
+          {beats.map((b, i) => (
+            <article class="card" data-state={b.status} data-drops={b.status === 'open' ? b.dropsAt : undefined}>
+              <div class="card__cover raw">
+                <img src={b.cover} alt={`${b.title} cover`} width="400" height="400" loading="lazy" decoding="async" />
+                {b.status !== 'open' && <span class={`stamp stamp--${b.status}`}>{b.status}</span>}
+              </div>
+              <div class="card__body">
+                <p class="label">snippet {String(i + 1).padStart(2, '0')}{b.meta && ` / ${b.meta}`}</p>
+                <h3>{b.title}</h3>
+                <Player src={b.snippet} label={b.title} />
+                {b.status === 'open' && (
+                  <>
+                    <p class="clock" role="timer" data-clock>dropping <time datetime={b.dropsAt} data-local>{fmtFallback(b.dropsAt)}</time></p>
+                    <div class="card__actions">
+                      <a class="btn btn--primary" href={mailto(`claim: ${b.title}`, `beat: ${b.title}\n\nbuy exclusive / collab (pick one):\n`)} data-inquiry data-subject={`claim: ${b.title}`} data-body={`beat: ${b.title}\n\nbuy exclusive / collab (pick one):\n`} data-decode>Claim it</a>
+                      <span class="label">dropping <time datetime={b.dropsAt} data-local>{fmtFallback(b.dropsAt)}</time></span>
+                    </div>
+                  </>
+                )}
+                {b.status === 'released' && b.releaseUrl && (
+                  <div class="card__actions"><a class="btn" href={b.releaseUrl} target="_blank" rel="noopener noreferrer" data-decode>Listen</a></div>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      </>
+    )
+  }
+</section>

@@ -1,0 +1,58 @@
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  color-scheme: dark;
+  background: var(--void);
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background: var(--void);
+  color: var(--bone);
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1.05rem + 0.4vw, 1.35rem);
+  line-height: 1.6;
+  overflow-x: clip;
+}
+
+img, svg, canvas { display: block; max-width: 100%; }
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { font-weight: 400; line-height: 1.05; text-transform: lowercase; overflow-wrap: anywhere; }
+a { color: inherit; text-decoration-color: var(--line); text-underline-offset: 0.25em; }
+a:hover { color: var(--ember); }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+::selection { background: var(--crimson); color: var(--bone); }
+
+.label {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--ash);
+}
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+.skip { position: fixed; left: 1rem; top: -4rem; z-index: 100; background: var(--bone); color: var(--void); padding: 0.75rem 1rem; font-family: var(--font-ui); }
+.skip:focus { top: 1rem; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 3rem; padding: 0.7rem 1.4rem;
+  font: 500 0.85rem/1.2 var(--font-ui); letter-spacing: 0.05em; text-decoration: none;
+  color: var(--bone); background: transparent;
+  border: 1px solid var(--line); border-radius: 0; cursor: pointer;
+  transition: color 0.4s var(--ease), border-color 0.4s var(--ease), background-color 0.4s var(--ease);
+}
+.btn:hover { color: var(--ember); border-color: var(--ember); }
+.btn--primary { background: var(--crimson); border-color: var(--crimson); }
+.btn--primary:hover { color: var(--bone); background: #b32626; border-color: #b32626; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+
+noscript .btn { margin-top: 0.5rem; }

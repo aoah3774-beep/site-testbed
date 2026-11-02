@@ -1,0 +1,109 @@
+# Everything on the page comes from this file. Edit it on GitHub (works on a phone),
+# commit, and Cloudflare rebuilds in 1-2 minutes. A bad edit fails the build with a
+# readable error and the live site stays untouched.
+#
+# REPLACE_ME and `sample: true` mark things to replace before launch.
+# Set the env var STRICT=1 on Cloudflare to block builds that still contain them.
+
+brand:
+  name: d3ath_by_bubz
+  handle: d3ath_by_bubz
+  imprint: 11hours ent
+  tagline: claim it or it's mine.
+  emblem: /emblem.svg            # placeholder: replace public/emblem.svg (or point this at a .webp/.png)
+
+site:
+  description: d3ath_by_bubz. rapper, producer, mixing engineer. beats up for grabs, new music, inquiries.
+  legalName: REPLACE_ME          # shown on /privacy
+  timeZone: America/Toronto      # only used for the no-JavaScript time fallback
+
+links:
+  listen: https://example.com/REPLACE_ME-streaming
+  soundPacks: https://www.google.com   # placeholder until a real storefront exists
+
+# Follow dropdown + footer. group: social | stream
+socials:
+  - { label: Instagram, url: "https://www.instagram.com/d3ath_by_bubz/", group: social }
+  - { label: TikTok, url: "https://www.tiktok.com/@d3ath_by_bubz", group: social }
+  - { label: X, url: "https://x.com/d3ath_by_bubz", group: social }
+  - { label: Twitch, url: "https://www.twitch.tv/REPLACE_ME", group: stream }
+  - { label: YouTube, url: "https://www.youtube.com/@REPLACE_ME", group: stream }
+
+contact:
+  email: REPLACE_ME@example.com
+  instagram: d3ath_by_bubz
+
+signup:
+  # Kit: Grow > Landing Pages & Forms > your form > Embed > HTML. Copy the form's action URL.
+  action: https://app.kit.com/forms/REPLACE_ME/subscriptions
+
+analytics:
+  cloudflareToken: ""            # Cloudflare Web Analytics token (32 hex chars). Empty = no analytics.
+
+# Cosmetic effects. Set any to false to switch it off. Nothing else depends on them.
+fx:
+  embers: true
+  grain: true
+  glitch: true
+  reveal: true
+  decode: true
+  cursor: true
+  parallax: true
+  gallery3d: true
+  helix: true                    # On the table cards spiral as you scroll
+
+live:
+  isLive: false
+  url: ""
+  nextStream: ""                 # e.g. 2026-11-15T20:00-05:00 (always include the offset)
+
+# Delete this block (latest: null) to hide the release player until there is one.
+latest:
+  sample: true
+  title: sample release
+  cover: /covers/sample-03.svg
+  audio: /audio/sample-release.wav
+  links:
+    - { label: Spotify, url: "https://example.com/REPLACE_ME-spotify" }
+  # embed: { provider: spotify, id: "track/4uLU6hMCjMI75M1A2tKUQC" }   # or { provider: youtube, id: "dQw4w9WgXcQ" }
+
+# Beats up for grabs. status: open | claimed | released. Use [] to show the empty state.
+onTheTable:
+  - sample: true
+    title: sample beat 01
+    cover: /covers/sample-01.svg
+    snippet: /audio/sample-beat-01.wav
+    meta: 140 bpm / f min
+    dropsAt: "2026-11-20T18:00-05:00"   # CHANGE ME: sample dates pass quickly
+    status: open
+  - sample: true
+    title: sample beat 02
+    cover: /covers/sample-02.svg
+    snippet: /audio/sample-beat-02.wav
+    meta: 128 bpm / a min
+    dropsAt: "2026-11-10T18:00-05:00"
+    status: claimed
+  - sample: true
+    title: sample beat 03
+    cover: /covers/sample-04.svg
+    snippet: /audio/sample-release.wav
+    meta: 150 bpm / e min
+    dropsAt: "2026-10-30T18:00-04:00"
+    status: released
+    releaseUrl: https://example.com/REPLACE_ME-song
+
+gallery:
+  - { image: /covers/sample-01.svg, title: sample 01, link: "https://example.com/REPLACE_ME-1" }
+  - { image: /covers/sample-02.svg, title: sample 02, link: "https://example.com/REPLACE_ME-2" }
+  - { image: /covers/sample-03.svg, title: sample 03, link: "https://example.com/REPLACE_ME-3" }
+  - { image: /covers/sample-04.svg, title: sample 04, link: "https://example.com/REPLACE_ME-4" }
+
+# Sound packs section. Set `packs: null` to hide it. `items: []` shows just the Browse button.
+# links.soundPacks (above) is the storefront the Browse button and footer link open.
+packs:
+  title: sound packs
+  teaser: serum presets and sound packs   # small line under the hero buttons ('' hides it)
+  blurb: serum presets and sound packs. made here, used here.
+  items:
+    - { sample: true, title: sample pack 01, cover: /covers/sample-01.svg, tag: serum presets, price: "$0", url: "https://example.com/REPLACE_ME-pack-1" }
+    - { sample: true, title: sample pack 02, cover: /covers/sample-04.svg, tag: wavetables, price: "$0", url: "https://example.com/REPLACE_ME-pack-2" }

@@ -1,0 +1,24 @@
+---
+import { site } from '../lib/content';
+
+const groups = [site.socials.filter((s) => s.group === 'social'), site.socials.filter((s) => s.group === 'stream')].filter((g) => g.length);
+let k = 0;
+---
+
+<!-- <details> works with no JS; src/scripts/follow.ts adds hover-open, Esc and outside-click -->
+<details class="follow" data-follow>
+  <summary class="btn" data-decode>Follow</summary>
+  <div class="follow__menu">
+    {
+      groups.map((g) => (
+        <ul>
+          {g.map((s) => (
+            <li style={`--k:${k++}`}>
+              <a href={s.url} target="_blank" rel="noopener noreferrer" data-decode>{s.label}</a>
+            </li>
+          ))}
+        </ul>
+      ))
+    }
+  </div>
+</details>

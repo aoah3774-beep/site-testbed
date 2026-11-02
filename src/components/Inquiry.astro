@@ -1,0 +1,15 @@
+---
+import { site, igDm } from '../lib/content';
+---
+
+<dialog class="inquiry" id="inquiry" aria-labelledby="inquiry-h">
+  <form method="dialog">
+    <h2 class="label" id="inquiry-h">write to me</h2>
+    <p class="label" data-inquiry-subject></p>
+    <a class="btn btn--primary" href={`mailto:${site.contact.email}`} data-inquiry-mail>Open email</a>
+    <code data-inquiry-email>{site.contact.email}</code>
+    <button class="btn" type="button" data-inquiry-copy data-email={site.contact.email}>Copy email</button>
+    <a class="btn" href={igDm} target="_blank" rel="noopener noreferrer">Instagram DM</a>
+    <button class="btn" value="close">Close</button>
+  </form>
+</dialog>

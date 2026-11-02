@@ -1,47 +1,35 @@
 ---
 import { site } from '../lib/content';
-import Player from './Player.astro';
-import Gallery from './Gallery.astro';
+import Mark from './Mark.astro';
 
-const { latest } = site;
-const embedUrl = latest?.embed
-  ? latest.embed.provider === 'spotify'
-    ? `https://open.spotify.com/embed/${latest.embed.id}`
-    : `https://www.youtube-nocookie.com/embed/${latest.embed.id}`
-  : '';
+const social = (label: string) => site.socials.find((s) => s.label.toLowerCase() === label)?.url ?? '';
+// the schema guarantees YouTube and Twitch exist in socials
+const faces = [
+  { name: 'spotify', label: 'Spotify', url: site.links.spotify },
+  { name: 'apple', label: 'Apple Music', url: site.links.appleMusic },
+  { name: 'youtube', label: 'YouTube', url: social('youtube') },
+  { name: 'twitch', label: 'Twitch', url: social('twitch') },
+] as const;
 ---
 
 <section class="section" id="music" aria-labelledby="music-h">
   <h2 id="music-h" data-glitch>music</h2>
-  {
-    !latest ? (
-      <p class="label">first drop incoming.</p>
-    ) : (
-      <>
-        <p class="label">latest</p>
-        <div class="latest">
-          <div class="raw"><img src={latest.cover} alt={`${latest.title} cover`} width="600" height="600" loading="lazy" decoding="async" /></div>
-          <div class="latest__body">
-            <h3>{latest.title}</h3>
-            {latest.audio && <Player src={latest.audio} label={latest.title} />}
-            {
-              latest.links.length > 0 && (
-                <div class="links">
-                  {latest.links.map((l) => <a class="btn" href={l.url} target="_blank" rel="noopener noreferrer" data-decode>{l.label}</a>)}
-                </div>
-              )
-            }
-            {
-              embedUrl && latest.embed && (
-                <div class="embed-slot" data-embed-slot>
-                  <button class="btn" type="button" data-embed={embedUrl} data-provider={latest.embed.provider}>load {latest.embed.provider} player</button>
-                </div>
-              )
-            }
-          </div>
+  <p class="label">listen anywhere.</p>
+  <!-- plain 2x2 link grid without JS or with reduced motion; src/fx/orb.ts turns it into a gyroscope -->
+  <div class="orb" data-orb>
+    <div class="orb__g1">
+      <div class="orb__g2">
+        <div class="orb__core">
+          {
+            faces.map((f, i) => (
+              <a class="orb__face" href={f.url} target="_blank" rel="noopener noreferrer" style={`--i:${i}`} aria-label={f.label}>
+                <Mark name={f.name} />
+                <span>{f.label}</span>
+              </a>
+            ))
+          }
         </div>
-        <Gallery />
-      </>
-    )
-  }
+      </div>
+    </div>
+  </div>
 </section>

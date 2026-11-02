@@ -17,8 +17,11 @@ site:
   legalName: REPLACE_ME          # shown on /privacy
   timeZone: America/Toronto      # only used for the no-JavaScript time fallback
 
+# Listen button (hero) and the music orb. Default home pages for now: swap in the artist page links later.
+# The orb's YouTube and Twitch faces come from `socials` below (labels must stay "YouTube" and "Twitch").
 links:
-  listen: https://example.com/REPLACE_ME-streaming
+  spotify: https://open.spotify.com
+  appleMusic: https://music.apple.com
   soundPacks: https://www.google.com   # placeholder until a real storefront exists
 
 # Follow dropdown + footer. group: social | stream
@@ -49,25 +52,17 @@ fx:
   decode: true
   cursor: true
   parallax: true
-  gallery3d: true
-  helix: true                    # On the table cards spiral as you scroll
+  orb: true                      # music section: gyroscope of links
+  helix: true                    # On the table: whirl (ring on wide screens, scroll-driven helix elsewhere)
+  glow: true                     # ember glow that follows the mouse across cards
 
 live:
   isLive: false
   url: ""
   nextStream: ""                 # e.g. 2026-11-15T20:00-05:00 (always include the offset)
 
-# Delete this block (latest: null) to hide the release player until there is one.
-latest:
-  sample: true
-  title: sample release
-  cover: /covers/sample-03.svg
-  audio: /audio/sample-release.wav
-  links:
-    - { label: Spotify, url: "https://example.com/REPLACE_ME-spotify" }
-  # embed: { provider: spotify, id: "track/4uLU6hMCjMI75M1A2tKUQC" }   # or { provider: youtube, id: "dQw4w9WgXcQ" }
-
 # Beats up for grabs. status: open | claimed | released. Use [] to show the empty state.
+# 3-4 beats get the orbit ring on wide landscape screens.
 onTheTable:
   - sample: true
     title: sample beat 01
@@ -91,12 +86,6 @@ onTheTable:
     dropsAt: "2026-10-30T18:00-04:00"
     status: released
     releaseUrl: https://example.com/REPLACE_ME-song
-
-gallery:
-  - { image: /covers/sample-01.svg, title: sample 01, link: "https://example.com/REPLACE_ME-1" }
-  - { image: /covers/sample-02.svg, title: sample 02, link: "https://example.com/REPLACE_ME-2" }
-  - { image: /covers/sample-03.svg, title: sample 03, link: "https://example.com/REPLACE_ME-3" }
-  - { image: /covers/sample-04.svg, title: sample 04, link: "https://example.com/REPLACE_ME-4" }
 
 # Sound packs section. Set `packs: null` to hide it. `items: []` shows just the Browse button.
 # links.soundPacks (above) is the storefront the Browse button and footer link open.

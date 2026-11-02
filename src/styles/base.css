@@ -42,17 +42,33 @@ a:hover { color: var(--ember); }
 .skip { position: fixed; left: 1rem; top: -4rem; z-index: 100; background: var(--bone); color: var(--void); padding: 0.75rem 1rem; font-family: var(--font-ui); }
 .skip:focus { top: 1rem; }
 
+/* service marks (Mark.astro): follow currentColor; the cut-outs take the page background */
+.mark { display: block; width: 1em; height: 1em; fill: currentColor; }
+.mark .cut { stroke: var(--void); }
+.mark .cutf { fill: var(--void); }
+
+/* buttons: hairline gold edge, faint top light, and one slow ember sweep on hover/focus */
 .btn {
+  position: relative; isolation: isolate; overflow: hidden;
   display: inline-flex; align-items: center; justify-content: center;
   min-height: 3rem; padding: 0.7rem 1.4rem;
   font: 500 0.85rem/1.2 var(--font-ui); letter-spacing: 0.05em; text-decoration: none;
-  color: var(--bone); background: transparent;
-  border: 1px solid var(--line); border-radius: 0; cursor: pointer;
-  transition: color 0.4s var(--ease), border-color 0.4s var(--ease), background-color 0.4s var(--ease);
+  color: var(--bone);
+  background: linear-gradient(180deg, rgb(232 223 208 / 0.05), rgb(232 223 208 / 0) 55%);
+  border: 1px solid rgb(216 169 58 / 0.3); border-radius: 0; cursor: pointer;
+  box-shadow: inset 0 1px 0 rgb(232 223 208 / 0.07), 0 10px 20px -14px rgb(0 0 0 / 0.9);
+  transition: color 0.4s var(--ease), border-color 0.4s var(--ease);
 }
+.btn::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(105deg, transparent 38%, rgb(217 105 42 / 0.3) 50%, transparent 62%);
+  translate: -130% 0; transition: translate 0.9s var(--ease);
+}
+.btn:is(:hover, :focus-visible)::before { translate: 130% 0; }
 .btn:hover { color: var(--ember); border-color: var(--ember); }
-.btn--primary { background: var(--crimson); border-color: var(--crimson); }
-.btn--primary:hover { color: var(--bone); background: #b32626; border-color: #b32626; }
+.btn--primary { background: linear-gradient(180deg, #ab2323, #7c1818); border-color: rgb(216 169 58 / 0.5); }
+.btn--primary:hover { color: var(--bone); background: linear-gradient(180deg, #bd2b2b, #8a1c1c); border-color: var(--gold); }
 .btn:disabled { opacity: 0.5; cursor: default; }
+@media (prefers-reduced-motion: reduce) { .btn::before { display: none; } }
 
 noscript .btn { margin-top: 0.5rem; }

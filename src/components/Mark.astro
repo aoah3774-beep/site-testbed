@@ -1,0 +1,7 @@
+---
+import { marks, type MarkName } from '../lib/marks';
+interface Props { name: MarkName }
+const { name } = Astro.props;
+---
+
+<svg class="mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false" set:html={marks[name]} />

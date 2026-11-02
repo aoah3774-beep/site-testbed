@@ -3,12 +3,13 @@ import type { ImageMetadata } from 'astro';
 import { Picture } from 'astro:assets';
 import { site } from '../lib/content';
 import FollowMenu from './FollowMenu.astro';
+import ListenMenu from './ListenMenu.astro';
 
 // Drop your painting at src/assets/painting.(jpg|png|webp|avif), 2560px wide or more.
 // Without it the hero uses the built-in dark gradient.
 const found = import.meta.glob<{ default: ImageMetadata }>('/src/assets/painting.{jpg,jpeg,png,webp,avif}', { eager: true });
 const painting = Object.values(found)[0]?.default;
-const { brand, links } = site;
+const { brand } = site;
 ---
 
 <header class="hero" id="top" data-hero>
@@ -35,7 +36,7 @@ const { brand, links } = site;
     <h1 class="hero__title" data-glitch>{brand.name}</h1>
     <p class="hero__tag">{brand.tagline}</p>
     <nav class="hero__links" aria-label="main">
-      <a class="btn btn--primary" href={links.listen} target="_blank" rel="noopener noreferrer" data-decode>Listen</a>
+      <ListenMenu />
       <a class="btn" href="#table" data-decode>On the table</a>
       <a class="btn" href="#work" data-decode>Work with me</a>
       <FollowMenu />

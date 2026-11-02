@@ -50,7 +50,7 @@
 /* embers canvas */
 .embers { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
 
-/* follow dropdown: wipe open with one glitch flash, items stagger in */
+/* dropdown: wipe open with one glitch flash, items stagger in */
 @media (prefers-reduced-motion: no-preference) {
   .follow[open] .follow__menu { animation: menu-in 420ms var(--ease) both, glitch 240ms steps(1) 1; }
   .follow[open] li { animation: item-in 420ms var(--ease) both; animation-delay: calc(var(--k) * 45ms + 120ms); }
@@ -58,6 +58,28 @@
 @keyframes menu-in { from { clip-path: inset(0 0 100% 0); opacity: 0; } to { clip-path: inset(0); opacity: 1; } }
 @keyframes item-in { from { opacity: 0; translate: 0 -6px; } to { opacity: 1; translate: 0; } }
 
-/* helix: On the table becomes one centered column whose cards orbit as you scroll (src/fx/helix.ts) */
-.table.is-helix { position: relative; grid-template-columns: 1fr; max-width: 40rem; margin-inline: auto; gap: 3.5rem; }
-.is-helix .card { will-change: transform, opacity; }
+/* card glow: soft ember light under the mouse (src/fx/glow.ts sets --mx / --my) */
+.card::after { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity 0.5s var(--ease);
+  background: radial-gradient(16rem circle at var(--mx, 50%) var(--my, 50%), rgb(217 105 42 / 0.13), transparent 65%); }
+[data-fx~='glow'] .card:hover::after { opacity: 1; }
+
+/* orb: gyroscope (src/fx/orb.ts). Outer hoop turns on Y, inner hoop on X, the ring of faces on Y inside them.
+   The box has a fixed size and clips, so nothing can spill over the next section. */
+.orb.is-3d { --w: clamp(6.5rem, 26vw, 9.5rem); position: relative; width: calc(var(--w) * 2.3); height: calc(var(--w) * 2.3); margin-inline: auto; perspective: 1200px; overflow: clip; touch-action: pan-y; }
+.is-3d .orb__g1, .is-3d .orb__g2, .is-3d .orb__core { display: block; position: absolute; transform-style: preserve-3d; }
+.is-3d .orb__g1 { inset: 0; transform: rotateY(calc(var(--a, 0) * 1deg)); }
+.is-3d .orb__g2 { inset: 12%; transform: rotateX(calc(var(--b, 0) * 1deg)); }
+.is-3d .orb__core { left: 50%; top: 50%; width: var(--w); height: var(--w); max-width: none; margin: calc(var(--w) / -2) 0 0 calc(var(--w) / -2); transform: rotateY(calc(var(--c, 0) * 1deg)); }
+.is-3d .orb__g1::before, .is-3d .orb__g2::before { content: ''; position: absolute; inset: 0; border: 1px solid rgb(216 169 58 / 0.38); border-radius: 50%; }
+.is-3d .orb__g2::before { border-color: rgb(217 105 42 / 0.38); }
+.is-3d .orb__g1::after, .is-3d .orb__g2::after { content: ''; position: absolute; left: 50%; top: 0; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+.is-3d .orb__g2::after { background: var(--ember); box-shadow: 0 0 10px var(--ember); }
+.is-3d .orb__face { position: absolute; inset: 0; aspect-ratio: auto; min-height: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  transform: rotateY(calc(var(--i) * 90deg)) translateZ(calc(var(--w) / 2)); }
+
+/* whirl (src/fx/helix.ts). Stacked: scroll spins the cards around a vertical axis. */
+.table.is-whirl { grid-template-columns: 1fr; max-width: 40rem; margin-inline: auto; gap: 3.5rem; }
+.is-whirl .card { width: min(92%, 26rem); justify-self: center; will-change: transform, opacity; }
+/* whirl, wide landscape: all cards share one grid cell and ride a ring, so the box is as tall as the tallest card */
+.table.is-orbit { --cw: clamp(16rem, 19vw, 20rem); grid-template-columns: 1fr; max-width: none; padding-block: 3.5rem 2rem; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
+.is-orbit .card { grid-area: 1 / 1; align-self: start; justify-self: center; width: var(--cw); grid-template-columns: 1fr; will-change: transform, opacity; }

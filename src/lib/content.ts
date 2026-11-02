@@ -21,7 +21,6 @@ const asset = z
   .string()
   .regex(/^\/(?!\/)[\w\-./]+$/, 'must be a path inside public/, starting with /')
   .refine((s) => !s.includes('..'), 'must not contain ..');
-const optAsset = z.union([z.literal(''), asset]);
 /** ISO timestamp WITH a timezone offset, e.g. 2026-11-20T18:00-05:00 */
 const when = z
   .string()
@@ -30,16 +29,7 @@ const when = z
 const optWhen = z.union([z.literal(''), when]);
 const handle = z.string().regex(/^[A-Za-z0-9._]{1,30}$/, 'letters, numbers, . and _ only');
 const label = z.string().min(1).max(60);
-const link = z.strictObject({ label, url });
 const social = z.strictObject({ label, url, group: z.enum(['social', 'stream']) });
-
-const embed = z.union([
-  z.strictObject({
-    provider: z.literal('spotify'),
-    id: z.string().regex(/^(track|album|playlist|episode)\/[A-Za-z0-9]{10,30}$/, 'e.g. track/4uLU6hMCjMI75M1A2tKUQC'),
-  }),
-  z.strictObject({ provider: z.literal('youtube'), id: z.string().regex(/^[\w-]{11}$/, '11-character video id') }),
-]);
 
 /* ---------- schema ---------- */
 
@@ -56,8 +46,13 @@ const schema = z.strictObject({
     legalName: z.string().min(1),
     timeZone: z.string().min(1), // IANA zone used for the no-JS time fallback
   }),
-  links: z.strictObject({ listen: url, soundPacks: url }),
-  socials: z.array(social),
+  links: z.strictObject({ spotify: url, appleMusic: url, soundPacks: url }),
+  socials: z
+    .array(social)
+    .refine(
+      (list) => ['youtube', 'twitch'].every((l) => list.some((s) => s.label.toLowerCase() === l)),
+      'must include entries labelled YouTube and Twitch (the music orb uses them)',
+    ),
   contact: z.strictObject({ email: z.email(), instagram: handle }),
   signup: z.strictObject({
     action: z
@@ -76,20 +71,11 @@ const schema = z.strictObject({
     decode: z.boolean(),
     cursor: z.boolean(),
     parallax: z.boolean(),
-    gallery3d: z.boolean(),
+    orb: z.boolean(),
     helix: z.boolean(),
+    glow: z.boolean(),
   }),
   live: z.strictObject({ isLive: z.boolean(), url: optUrl, nextStream: optWhen }),
-  latest: z
-    .strictObject({
-      title: label,
-      cover: asset,
-      audio: optAsset.default(''),
-      links: z.array(link).default([]),
-      embed: embed.optional(),
-      sample: z.boolean().default(false),
-    })
-    .nullable(),
   onTheTable: z.array(
     z.strictObject({
       title: label,
@@ -102,7 +88,6 @@ const schema = z.strictObject({
       sample: z.boolean().default(false),
     }),
   ),
-  gallery: z.array(z.strictObject({ image: asset, title: label, link: url })),
   packs: z
     .strictObject({
       title: label,

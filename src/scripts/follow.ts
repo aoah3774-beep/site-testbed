@@ -1,9 +1,12 @@
-// Follow dropdown on top of <details>: opens on mouse hover (desktop) or tap/Enter; closes on Esc,
+// Dropdowns built on <details> (Listen and Follow): open on mouse hover (desktop) or tap/Enter; close on Esc,
 // outside click, focus leaving, or picking a link. Without JS the native <details> still works.
 export function initFollow() {
-  const d = document.querySelector<HTMLDetailsElement>('[data-follow]');
-  const summary = d?.querySelector('summary');
-  if (!d || !summary) return;
+  document.querySelectorAll<HTMLDetailsElement>('[data-follow]').forEach(wire);
+}
+
+function wire(d: HTMLDetailsElement) {
+  const summary = d.querySelector('summary');
+  if (!summary) return;
 
   let pinned = false; // opened by click/tap/Enter: stays open until dismissed
   let hovered = false; // opened by hover

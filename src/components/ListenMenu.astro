@@ -1,0 +1,28 @@
+---
+import { site } from '../lib/content';
+import Mark from './Mark.astro';
+
+const options = [
+  { name: 'spotify', label: 'Spotify', url: site.links.spotify },
+  { name: 'apple', label: 'Apple Music', url: site.links.appleMusic },
+] as const;
+---
+
+<!-- same <details> pattern as FollowMenu: hover on desktop, tap on mobile, works with no JS (follow.ts adds Esc / outside click) -->
+<details class="follow listen" data-follow>
+  <summary class="btn btn--primary" data-decode>Listen</summary>
+  <div class="follow__menu">
+    <ul>
+      {
+        options.map((o, k) => (
+          <li style={`--k:${k}`}>
+            <a href={o.url} target="_blank" rel="noopener noreferrer" aria-label={`listen on ${o.label}`}>
+              <Mark name={o.name} />
+              <span>{o.label}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</details>

@@ -14,9 +14,9 @@ import { site } from '../lib/content';
 const { live } = site;
 const dots = [
   ['top', 'top'],
+  ['music', 'music'],
   ['table', 'on the table'],
   ...(site.packs ? [['packs', 'sound packs']] : []),
-  ['music', 'music'],
   ...((live.isLive && live.url) || live.nextStream ? [['live', 'live']] : []),
   ['work', 'work with me'],
   ['list', 'email list'],
@@ -26,11 +26,11 @@ const dots = [
 <Base>
   <Hero />
   <main id="main">
+    <Music />
+    <hr class="rule" />
     <OnTheTable />
     <hr class="rule" />
     <Packs />
-    <hr class="rule" />
-    <Music />
     <Live />
     <hr class="rule" />
     <Work />

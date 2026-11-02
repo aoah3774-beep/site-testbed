@@ -4,7 +4,6 @@ import { initPlayer } from './player';
 import { initCountdown } from './countdown';
 import { initInquiry } from './inquiry';
 import { initSignup } from './signup';
-import { initEmbeds } from './embed';
 import { initNav } from './nav';
 import { initFollow } from './follow';
 
@@ -13,7 +12,6 @@ initPlayer();
 initCountdown();
 initInquiry();
 initSignup();
-initEmbeds();
 initNav();
 initFollow();
 
@@ -26,11 +24,12 @@ const effects: [string, boolean, Fx][] = [
   ['reveal', !reduced, () => import('../fx/reveal')],
   ['embers', !reduced, () => import('../fx/embers')],
   ['glitch', !reduced, () => import('../fx/glitch')],
-  ['gallery3d', !reduced, () => import('../fx/gallery3d')],
+  ['orb', !reduced, () => import('../fx/orb')],
   ['helix', !reduced, () => import('../fx/helix')],
   ['decode', !reduced && fine, () => import('../fx/decode')],
   ['cursor', !reduced && fine, () => import('../fx/cursor')],
   ['parallax', !reduced && fine, () => import('../fx/parallax')],
+  ['glow', !reduced && fine, () => import('../fx/glow')],
 ];
 
 const run = () => {

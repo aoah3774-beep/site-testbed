@@ -83,4 +83,7 @@
    A pool of ember light under the ring grounds it. */
 .table.is-orbit { --cw: clamp(16rem, 19vw, 20rem); position: relative; grid-template-columns: 1fr; max-width: none; padding-block: 3.5rem 2.5rem; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
 .table.is-orbit::after { content: ''; position: absolute; left: 50%; bottom: 0; width: 70%; height: 6rem; translate: -50% 0; pointer-events: none; background: radial-gradient(ellipse at center, rgb(217 105 42 / 0.14), transparent 70%); }
+/* a soft glint that sweeps across each cover as its card swings past (src/fx/helix.ts drives --shine) */
+.is-orbit .card__cover::before { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(105deg, transparent calc(var(--shine, -40%) - 16%), rgb(232 223 208 / 0.16) var(--shine, -40%), transparent calc(var(--shine, -40%) + 16%)); }
 .is-orbit .card { grid-area: 1 / 1; align-self: start; justify-self: center; width: var(--cw); will-change: transform, opacity; }

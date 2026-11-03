@@ -17,11 +17,10 @@ main > .section:nth-of-type(even)::before {
     radial-gradient(28rem 20rem at 0 100%, rgb(217 105 42 / 0.07), transparent 70%);
 }
 /* solid bands (#table, #packs): ID selectors beat the two rules above, so the same full-bleed ::before becomes a flat color */
-/* #table: the band starts below the section title (section padding + h2 height + its margin and underline) and is hard-edged */
+/* #table: soft top edge so the thorns meet no seam; the bottom edge is hard */
 #table::before {
   background: var(--band-table);
-  top: calc(clamp(4rem, 10vw, 8rem) + clamp(2.25rem, 6vw, 4rem) * 1.05 + 1.5rem);
-  mask-image: none;
+  mask-image: linear-gradient(to bottom, transparent, #000 4rem);
 }
 /* #packs: hard top edge against the table band, fades smoothly into "work with me" at the bottom */
 #packs::before { background: var(--band-ash); mask-image: linear-gradient(to bottom, #000 calc(100% - 8rem), transparent); }
@@ -96,7 +95,7 @@ main > .section:nth-of-type(even)::before {
 /* ---------- sound packs: a solid ash band (see #packs::before above); a beam of light sweeps the cover on hover, focus or touch ---------- */
 .packs { list-style: none; margin: 0 0 2rem; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); gap: 1.25rem; }
 .pack { display: grid; gap: 0.5rem; text-decoration: none; }
-.pack img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.pack img { width: 100%; aspect-ratio: 1; object-fit: cover; scale: 1.16; } /* oversize so reveal.ts can drift it inside its frame */
 .pack__title { font-size: 1.3rem; line-height: 1.1; text-transform: lowercase; }
 .pack:hover .pack__title { color: var(--ember); }
 .pack .raw::before { content: ''; position: absolute; inset: -10% 0; z-index: 2; pointer-events: none; translate: -130% 0;

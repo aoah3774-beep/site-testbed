@@ -1,11 +1,12 @@
 // "On the table" whirl. One GSAP engine, two layouts, one feel: fast start, long soft landing, a slight overshoot.
 //  - wide landscape screens with 3-4 beats: the cards sit on a tilted ring that rests on one card and glides to the next every
-//    few seconds. Drag it: on release it settles on the nearest card (a flick carries it a little further). Hover or touch pauses
-//    the glide; keyboard focus brings a card to the front.
+//    few seconds. The ring fans open the first time it scrolls into view, front cards are larger and float gently, the ring
+//    breathes, and a glint sweeps each cover as its card swings past. Drag it: on release it settles on the nearest card (a flick
+//    carries it a little further). Hover or touch pauses the glide; keyboard focus brings a card to the front.
 //  - everything else: cards stay stacked and ride a wheel as you scroll; ScrollTrigger's scrub smooths the scroll position.
-// Cards also lean a few degrees toward the mouse. Depth is shown with opacity and a dark veil (--dim), never blur.
-// Tune: DWELL / TRAVEL / RISE / YAW / ROLL (ring), DEPTH / TILT / TWIST / SWAY (stack), LEAN (mouse).
-import { gsap, SETTLE, clamp, whileVisible } from './motion';
+// Cards also lean a few degrees toward the mouse. Depth is shown with opacity, scale and a dark veil (--dim), never blur.
+// Tune: DWELL / TRAVEL / RISE / YAW / ROLL / FLOAT / BREATHE / FAR (ring), DEPTH / TILT / TWIST / SWAY (stack), LEAN (mouse).
+import { gsap, SETTLE, SOFT, clamp, whileVisible } from './motion';
 
 const TAU = Math.PI * 2;
 const WIDE = matchMedia('(min-width: 60rem) and (min-height: 43rem) and (orientation: landscape)');
@@ -75,6 +76,11 @@ const TRAVEL = 1.7; // s per move
 const RISE = 36; // px the far side of the ring sits higher than the front
 const YAW = 0.38; // rad the side cards turn toward the viewer
 const ROLL = 0.035; // rad of roll that gives each move a small flourish
+const FLOAT = 6; // px the cards bob up and down while resting
+const BREATHE = 0.03; // rad the whole ring sways back and forth while resting
+const FAR = 0.84; // scale of a card at the back of the ring (the front card is 1)
+
+let opened = false; // the ring fans open once per page view
 
 function orbit(table: HTMLElement, cards: HTMLElement[]): Dispose {
   const ac = new AbortController();
@@ -86,8 +92,10 @@ function orbit(table: HTMLElement, cards: HTMLElement[]): Dispose {
   const held = pauser(table, signal);
   const tilt = lean(cards, signal);
   const ring = { a: 0 }; // shown angle
+  const open = { v: opened ? 1 : 0 }; // 0 = cards gathered and turned, 1 = ring fully open
   let slot = 0; // which card (unwrapped) the ring is heading for
   let dwell = 0;
+  let clock = 0; // ms, drives the float and breathing
   let R = 0;
   let dragging = false;
   let lastX = 0;
@@ -95,15 +103,21 @@ function orbit(table: HTMLElement, cards: HTMLElement[]): Dispose {
   let flick = 0; // rad per ms from the last drag moves
 
   const render = () => {
+    const sway = BREATHE * Math.sin(clock / 3600) * open.v;
+    const turn = (1 - open.v) * 1.1; // the ring spins into place as it opens
     cards.forEach((el, i) => {
-      const a = ring.a + i * step;
+      const a = ring.a + sway + turn + i * step;
       const c = Math.cos(a);
       const s = Math.sin(a);
       const front = (c + 1) / 2; // 1 at the front, 0 at the back
       const t = tilt[i]!;
-      el.style.transform = `perspective(1600px) translate3d(${(R * s).toFixed(1)}px,${((RISE * (c - 1)) / 2).toFixed(1)}px,${(R * (c - 1)).toFixed(1)}px) rotateY(${(-YAW * s).toFixed(3)}rad) rotateZ(${(ROLL * s).toFixed(3)}rad) rotateX(${t.x.toFixed(2)}deg) rotateY(${t.y.toFixed(2)}deg)`;
-      el.style.opacity = (0.3 + 0.7 * front ** 1.4).toFixed(2);
+      const bob = FLOAT * Math.sin(clock / 1500 + i * 1.7) * (0.4 + 0.6 * front);
+      const scale = FAR + (1 - FAR) * front ** 1.2;
+      const r = R * open.v;
+      el.style.transform = `perspective(1600px) translate3d(${(r * s).toFixed(1)}px,${((RISE * (c - 1)) / 2 + bob).toFixed(1)}px,${(r * (c - 1)).toFixed(1)}px) rotateY(${(-YAW * s).toFixed(3)}rad) rotateZ(${(ROLL * s).toFixed(3)}rad) scale(${scale.toFixed(3)}) rotateX(${t.x.toFixed(2)}deg) rotateY(${t.y.toFixed(2)}deg)`;
+      el.style.opacity = ((0.3 + 0.7 * front ** 1.4) * (0.15 + 0.85 * open.v)).toFixed(2);
       el.style.setProperty('--dim', ((1 - front) * 0.5).toFixed(2));
+      el.style.setProperty('--shine', `${(50 - s * 90).toFixed(1)}%`); // the glint travels across the cover as the card swings
       el.style.zIndex = String(Math.round(front * 100));
       el.style.pointerEvents = c < -0.7 ? 'none' : ''; // the far card can't be hit through the front one
     });
@@ -118,6 +132,21 @@ function orbit(table: HTMLElement, cards: HTMLElement[]): Dispose {
     dwell = 0;
     gsap.to(ring, { a: -k * step, duration: TRAVEL, ease: SETTLE, overwrite: true });
   };
+
+  // fan open the first time the table is on screen
+  if (!opened) {
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e?.isIntersecting) return;
+        io.disconnect();
+        opened = true;
+        gsap.to(open, { v: 1, duration: 2.2, ease: SOFT });
+      },
+      { threshold: 0.3 },
+    );
+    io.observe(table);
+    signal.addEventListener('abort', () => io.disconnect());
+  }
 
   table.addEventListener(
     'pointerdown',
@@ -164,6 +193,7 @@ function orbit(table: HTMLElement, cards: HTMLElement[]): Dispose {
   whileVisible(
     table,
     (dt) => {
+      clock += dt;
       if (dragging || held()) dwell = 0;
       else if ((dwell += dt) >= DWELL) go(slot + 1); // the next card arrives from the right
       render();
@@ -179,6 +209,7 @@ function orbit(table: HTMLElement, cards: HTMLElement[]): Dispose {
   return () => {
     ac.abort();
     gsap.killTweensOf(ring);
+    gsap.killTweensOf(open);
     undo();
   };
 }

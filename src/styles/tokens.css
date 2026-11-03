@@ -10,8 +10,8 @@
   --line: rgb(138 133 128 / 0.25);
 
   /* solid section bands (#table and #packs in sections.css) */
-  --band-table: #070605; /* near-black */
-  --band-ash: #231f1c; /* washed-out brownish gray, lighter than --soot */
+  --band-table: #000; /* true black: clearly darker than the hero's --void */
+  --band-ash: #2b241e; /* beigey-brown gray, still dark and neutral, lighter than --soot */
 
   --font-display: 'Cormorant Garamond', 'IM Fell English', Georgia, serif;
   --font-ui: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;

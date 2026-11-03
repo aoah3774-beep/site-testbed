@@ -17,11 +17,14 @@ main > .section:nth-of-type(even)::before {
     radial-gradient(28rem 20rem at 0 100%, rgb(217 105 42 / 0.07), transparent 70%);
 }
 /* solid bands (#table, #packs): ID selectors beat the two rules above, so the same full-bleed ::before becomes a flat color */
+/* #table: the band starts below the section title (section padding + h2 height + its margin and underline) and is hard-edged */
 #table::before {
   background: var(--band-table);
-  mask-image: linear-gradient(to bottom, transparent, #000 4rem); /* soft top edge so the thorns meet no seam; the bottom edge is hard */
+  top: calc(clamp(4rem, 10vw, 8rem) + clamp(2.25rem, 6vw, 4rem) * 1.05 + 1.5rem);
+  mask-image: none;
 }
-#packs::before { background: var(--band-ash); mask-image: none; }
+/* #packs: hard top edge against the table band, fades smoothly into "work with me" at the bottom */
+#packs::before { background: var(--band-ash); mask-image: linear-gradient(to bottom, #000 calc(100% - 8rem), transparent); }
 #packs .label { color: #9a958f; } /* --ash on --band-ash is only ~4.5:1; this is ~5.5:1 */
 /* divider: a neutral hairline with a small ornament (one ember dot) in the middle */
 .rule {
@@ -50,11 +53,10 @@ main > .section:nth-of-type(even)::before {
 .hero__links { display: flex; justify-content: center; gap: 2.5rem; margin-top: 1rem; }
 
 /* emblem rows: greyed marks that a beam lights (src/fx/spotlight.ts). Without JS, hover and focus light them directly. */
-.emblems { display: grid; justify-items: center; gap: 0; margin-top: 0.5rem; }
-/* divider between the listen and follow rows: a hairline fading at both ends with one ember dot (matches .rule) */
-.emblems__rule { position: relative; width: min(14rem, 60vw); height: 1px; margin-block: 0.15rem;
+.emblems { display: grid; justify-items: center; gap: 0; margin-top: clamp(1rem, 2.6vw, 1.75rem); }
+/* divider between the listen and follow rows: a hairline fading at both ends */
+.emblems__rule { width: min(14rem, 60vw); height: 1px; margin-block: 0.15rem;
   background: linear-gradient(90deg, transparent, rgb(138 133 128 / 0.45), transparent); }
-.emblems__rule::after { content: ''; position: absolute; left: 50%; top: 50%; width: 5px; height: 5px; translate: -50% -50%; border-radius: 50%; background: var(--ember); }
 .row { position: relative; overflow: clip; padding: 0.7rem 1.5rem; touch-action: pan-y; }
 .row ul { display: flex; align-items: center; justify-content: center; gap: clamp(1.1rem, 5vw, 2rem); list-style: none; margin: 0; padding: 0; }
 .row--listen { --s: 3.25rem; }

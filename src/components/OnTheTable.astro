@@ -18,22 +18,21 @@ const beats = site.onTheTable;
       <>
         <p class="label">beats up for grabs. claim it or it's mine.</p>
         <div class="table">
-          {beats.map((b, i) => (
+          {beats.map((b) => (
             <article class="card" data-state={b.status} data-drops={b.status === 'open' ? b.dropsAt : undefined}>
               <div class="card__cover raw">
                 <img src={b.cover} alt={`${b.title} cover`} width="400" height="400" loading="lazy" decoding="async" />
                 {b.status !== 'open' && <span class={`stamp stamp--${b.status}`}>{b.status}</span>}
               </div>
               <div class="card__body">
-                <p class="label">snippet {String(i + 1).padStart(2, '0')}{b.meta && ` / ${b.meta}`}</p>
                 <h3>{b.title}</h3>
+                {b.meta && <p class="label">{b.meta}</p>}
                 <Player src={b.snippet} label={b.title} />
                 {b.status === 'open' && (
                   <>
                     <p class="clock" role="timer" data-clock>dropping <time datetime={b.dropsAt} data-local>{fmtFallback(b.dropsAt)}</time></p>
                     <div class="card__actions">
                       <a class="btn btn--primary" href={mailto(`claim: ${b.title}`, `beat: ${b.title}\n\nbuy exclusive / collab (pick one):\n`)} data-inquiry data-subject={`claim: ${b.title}`} data-body={`beat: ${b.title}\n\nbuy exclusive / collab (pick one):\n`} data-decode>Claim it</a>
-                      <span class="label">dropping <time datetime={b.dropsAt} data-local>{fmtFallback(b.dropsAt)}</time></span>
                     </div>
                   </>
                 )}

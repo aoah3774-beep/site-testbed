@@ -1,6 +1,7 @@
 import { parse } from 'yaml';
 import { z } from 'astro/zod';
 import raw from '../content/site.yaml?raw';
+import { marks, type MarkName } from './marks';
 
 /* ---------- field types ---------- */
 
@@ -29,7 +30,8 @@ const when = z
 const optWhen = z.union([z.literal(''), when]);
 const handle = z.string().regex(/^[A-Za-z0-9._]{1,30}$/, 'letters, numbers, . and _ only');
 const label = z.string().min(1).max(60);
-const social = z.strictObject({ label, url, group: z.enum(['social', 'stream']) });
+const mark = z.enum(Object.keys(marks) as [MarkName, ...MarkName[]]);
+const social = z.strictObject({ label, url, mark });
 
 /* ---------- schema ---------- */
 
@@ -47,12 +49,7 @@ const schema = z.strictObject({
     timeZone: z.string().min(1), // IANA zone used for the no-JS time fallback
   }),
   links: z.strictObject({ spotify: url, appleMusic: url, soundPacks: url }),
-  socials: z
-    .array(social)
-    .refine(
-      (list) => ['youtube', 'twitch'].every((l) => list.some((s) => s.label.toLowerCase() === l)),
-      'must include entries labelled YouTube and Twitch (the music orb uses them)',
-    ),
+  socials: z.array(social),
   contact: z.strictObject({ email: z.email(), instagram: handle }),
   signup: z.strictObject({
     action: z
@@ -64,6 +61,7 @@ const schema = z.strictObject({
   }),
   analytics: z.strictObject({ cloudflareToken: z.string().regex(/^[a-f0-9]{32}$|^$/, '32 hex characters, or empty') }),
   fx: z.strictObject({
+    intro: z.boolean(),
     embers: z.boolean(),
     grain: z.boolean(),
     glitch: z.boolean(),
@@ -71,7 +69,8 @@ const schema = z.strictObject({
     decode: z.boolean(),
     cursor: z.boolean(),
     parallax: z.boolean(),
-    orb: z.boolean(),
+    spotlight: z.boolean(),
+    magnet: z.boolean(),
     helix: z.boolean(),
     glow: z.boolean(),
     wind: z.boolean(),
@@ -92,7 +91,6 @@ const schema = z.strictObject({
   packs: z
     .strictObject({
       title: label,
-      teaser: z.string().max(60), // small line under the hero buttons; '' hides it
       blurb: z.string().max(140),
       items: z.array(
         z.strictObject({

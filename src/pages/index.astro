@@ -1,10 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
-import Thorns from '../components/Thorns.astro';
 import OnTheTable from '../components/OnTheTable.astro';
 import Packs from '../components/Packs.astro';
-import Music from '../components/Music.astro';
 import Live from '../components/Live.astro';
 import Work from '../components/Work.astro';
 import Signup from '../components/Signup.astro';
@@ -15,7 +13,6 @@ import { site } from '../lib/content';
 const { live } = site;
 const dots = [
   ['top', 'top'],
-  ['music', 'music'],
   ['table', 'on the table'],
   ...(site.packs ? [['packs', 'sound packs']] : []),
   ...((live.isLive && live.url) || live.nextStream ? [['live', 'live']] : []),
@@ -26,10 +23,7 @@ const dots = [
 
 <Base>
   <Hero />
-  <Thorns />
   <main id="main">
-    <Music />
-    <hr class="rule" />
     <OnTheTable />
     <hr class="rule" />
     <Packs />

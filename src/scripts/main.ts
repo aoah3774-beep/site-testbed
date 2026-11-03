@@ -5,7 +5,6 @@ import { initCountdown } from './countdown';
 import { initInquiry } from './inquiry';
 import { initSignup } from './signup';
 import { initNav } from './nav';
-import { initFollow } from './follow';
 
 initLocalTime();
 initPlayer();
@@ -13,20 +12,20 @@ initCountdown();
 initInquiry();
 initSignup();
 initNav();
-initFollow();
 
 const flags = new Set((document.documentElement.dataset.fx ?? '').split(' ').filter(Boolean));
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-type Fx = () => Promise<{ default: () => void }>;
+type Fx = () => Promise<{ default: () => void | Promise<void> }>;
 const effects: [string, boolean, Fx][] = [
+  ['spotlight', !reduced, () => import('../fx/spotlight')],
   ['reveal', !reduced, () => import('../fx/reveal')],
   ['embers', !reduced, () => import('../fx/embers')],
   ['wind', !reduced, () => import('../fx/wind')],
   ['glitch', !reduced, () => import('../fx/glitch')],
-  ['orb', !reduced, () => import('../fx/orb')],
   ['helix', !reduced, () => import('../fx/helix')],
+  ['magnet', !reduced && fine, () => import('../fx/magnet')],
   ['decode', !reduced && fine, () => import('../fx/decode')],
   ['cursor', !reduced && fine, () => import('../fx/cursor')],
   ['parallax', !reduced && fine, () => import('../fx/parallax')],

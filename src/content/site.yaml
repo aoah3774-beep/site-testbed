@@ -17,20 +17,20 @@ site:
   legalName: REPLACE_ME          # shown on /privacy
   timeZone: America/Toronto      # only used for the no-JavaScript time fallback
 
-# Listen button (hero) and the music orb. Default home pages for now: swap in the artist page links later.
-# The orb's YouTube and Twitch faces come from `socials` below (labels must stay "YouTube" and "Twitch").
+# The "listen" emblems in the hero. Default home pages for now: swap in the artist page links later.
 links:
   spotify: https://open.spotify.com
   appleMusic: https://music.apple.com
   soundPacks: https://www.google.com   # placeholder until a real storefront exists
 
-# Follow dropdown + footer. group: social | stream
+# The "follow" emblems in the hero (shown in this order) and the footer links.
+# mark: which drawn emblem to use (instagram | tiktok | x | twitch | youtube | spotify | apple)
 socials:
-  - { label: Instagram, url: "https://www.instagram.com/d3ath_by_bubz/", group: social }
-  - { label: TikTok, url: "https://www.tiktok.com/@d3ath_by_bubz", group: social }
-  - { label: X, url: "https://x.com/d3ath_by_bubz", group: social }
-  - { label: Twitch, url: "https://www.twitch.tv/REPLACE_ME", group: stream }
-  - { label: YouTube, url: "https://www.youtube.com/@REPLACE_ME", group: stream }
+  - { label: Twitch, url: "https://www.twitch.tv/REPLACE_ME", mark: twitch }
+  - { label: YouTube, url: "https://www.youtube.com/@REPLACE_ME", mark: youtube }
+  - { label: Instagram, url: "https://www.instagram.com/d3ath_by_bubz/", mark: instagram }
+  - { label: TikTok, url: "https://www.tiktok.com/@d3ath_by_bubz", mark: tiktok }
+  - { label: X, url: "https://x.com/d3ath_by_bubz", mark: x }
 
 contact:
   email: REPLACE_ME@example.com
@@ -45,17 +45,19 @@ analytics:
 
 # Cosmetic effects. Set any to false to switch it off. Nothing else depends on them.
 fx:
+  intro: true                    # load sequence: title letters rise, emblems fade up, thorns draw in, embers swell (CSS only)
   embers: true
   grain: true
   glitch: true
-  reveal: true
+  reveal: true                   # scroll: titles rise from a mask, sections wipe in, thorns and covers drift
   decode: true
   cursor: true
   parallax: true
-  orb: true                      # music section: gyroscope of links
-  helix: true                    # On the table: whirl (ring on wide screens, scroll-driven helix elsewhere)
+  spotlight: true                # hero emblems: the moving beam
+  magnet: true                   # the two hero text links lean toward the mouse
+  helix: true                    # On the table: whirl (ring on wide screens, scroll-driven wheel elsewhere)
   glow: true                     # ember glow that follows the mouse across cards
-  wind: true # ash and ember motes that scroll and gusts stir
+  wind: true                     # ash and ember motes that scroll and gusts stir
 
 live:
   isLive: false
@@ -88,11 +90,10 @@ onTheTable:
     status: released
     releaseUrl: https://example.com/REPLACE_ME-song
 
-# Sound packs section. Set `packs: null` to hide it. `items: []` shows just the Browse button.
-# links.soundPacks (above) is the storefront the Browse button and footer link open.
+# Sound packs section. Set `packs: null` to hide it. `items: []` shows just the Browse link.
+# links.soundPacks (above) is the storefront the Browse link and footer link open.
 packs:
   title: sound packs
-  teaser: serum presets and sound packs   # small line under the hero buttons ('' hides it)
   blurb: serum presets and sound packs. made here, used here.
   items:
     - { sample: true, title: sample pack 01, cover: /covers/sample-01.svg, tag: serum presets, price: "$0", url: "https://example.com/REPLACE_ME-pack-1" }

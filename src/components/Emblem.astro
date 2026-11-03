@@ -1,0 +1,14 @@
+---
+import Mark from './Mark.astro';
+import type { MarkName } from '../lib/marks';
+interface Props { name: MarkName; label: string; url: string; i: number }
+const { name, label, url, i } = Astro.props;
+---
+
+<!-- two copies of the mark: the grey one, and a bone one with a glow whose opacity src/fx/spotlight.ts drives -->
+<li style={`--i:${i}`}>
+  <a class="emblem" href={url} target="_blank" rel="noopener noreferrer" aria-label={label}>
+    <Mark name={name} />
+    <span class="emblem__lit" aria-hidden="true"><Mark name={name} /></span>
+  </a>
+</li>

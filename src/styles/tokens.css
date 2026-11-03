@@ -1,5 +1,5 @@
 :root {
-  /* palette: ~90% dark neutrals, one pop color per section */
+  /* palette: ~90% dark neutrals. Ember and crimson are tiny accents only; gold survives only in focus rings and the vine highlight. */
   --void: #0d0b0a;
   --soot: #1a1613;
   --ash: #8a8580;
@@ -9,14 +9,12 @@
   --gold: #d8a93a;
   --line: rgb(138 133 128 / 0.25);
 
-  /* gilded molding: used as a border-image on picture frames (cards, panels, dialog) */
-  --gilt: linear-gradient(135deg, #d9b45a, #7a5e22 22%, #4a3711 38%, #bf9a40 54%, #6e5319 72%, #c9a64e);
-
   --font-display: 'Cormorant Garamond', 'IM Fell English', Georgia, serif;
   --font-ui: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
   --pad: clamp(1.25rem, 5vw, 4rem);
   --max: 72rem;
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --soft: cubic-bezier(0.16, 1, 0.3, 1); /* fast start, long soft landing; GSAP's expo.out in src/fx/motion.ts */
   --slow: 800ms;
 }

@@ -23,6 +23,7 @@ type Fx = () => Promise<{ default: () => void }>;
 const effects: [string, boolean, Fx][] = [
   ['reveal', !reduced, () => import('../fx/reveal')],
   ['embers', !reduced, () => import('../fx/embers')],
+  ['wind', !reduced, () => import('../fx/wind')],
   ['glitch', !reduced, () => import('../fx/glitch')],
   ['orb', !reduced, () => import('../fx/orb')],
   ['helix', !reduced, () => import('../fx/helix')],

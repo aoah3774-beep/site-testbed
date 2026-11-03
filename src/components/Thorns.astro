@@ -1,0 +1,107 @@
+---
+// A bed of thorned vines and roses between the hero and the music section.
+// Drawn once at build time from a fixed seed, so the art is identical on every build and ships no JS.
+// Colors and the draw-in animation live in sections.css / fx.css.
+type Pt = { x: number; y: number };
+const W = 1440;
+let seed = 7;
+const rnd = () => {
+  seed = (seed + 0x6d2b79f5) | 0;
+  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
+const n = (v: number) => v.toFixed(1);
+
+/** Smooth path through points (quadratic curves through midpoints). */
+const smooth = (p: Pt[]) => {
+  let d = `M${n(p[0]!.x)} ${n(p[0]!.y)}`;
+  for (let i = 1; i < p.length - 1; i++) d += `Q${n(p[i]!.x)} ${n(p[i]!.y)} ${n((p[i]!.x + p[i + 1]!.x) / 2)} ${n((p[i]!.y + p[i + 1]!.y) / 2)}`;
+  return d;
+};
+const unit = (a: Pt, b: Pt): Pt => {
+  const l = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+  return { x: (b.x - a.x) / l, y: (b.y - a.y) / l };
+};
+
+/** One wandering vine: y(x) is two stacked sine waves, sampled every 20 units. */
+const strand = (base: number, amp: number, k1: number, k2: number, ph: number) => {
+  const y = (x: number) => base + amp * Math.sin(x * k1 + ph) + amp * 0.45 * Math.sin(x * k2 + ph * 1.7);
+  const pts: Pt[] = [];
+  for (let x = -40; x <= W + 40; x += 20) pts.push({ x, y: y(x) });
+  return { y, pts };
+};
+const strands = [strand(150, 24, 0.0062, 0.0171, 0.4), strand(168, 18, 0.0081, 0.0139, 2.1), strand(132, 14, 0.0105, 0.021, 4.3)];
+
+/** A curved, back-swept thorn rooted at p. */
+const thorn = (p: Pt, t: Pt, nm: Pt, len: number) => {
+  const a = { x: p.x - t.x * 3.2, y: p.y - t.y * 3.2 };
+  const b = { x: p.x + t.x * 3.2, y: p.y + t.y * 3.2 };
+  const tip = { x: p.x + nm.x * len + t.x * len * 0.5, y: p.y + nm.y * len + t.y * len * 0.5 };
+  return `M${n(a.x)} ${n(a.y)}Q${n(a.x + nm.x * len * 0.55)} ${n(a.y + nm.y * len * 0.55)} ${n(tip.x)} ${n(tip.y)}Q${n(b.x + nm.x * len * 0.1)} ${n(b.y + nm.y * len * 0.1)} ${n(b.x)} ${n(b.y)}Z`;
+};
+const thorns = strands.map((s, si) => {
+  let d = '';
+  let side = 1;
+  for (let i = 2; i < s.pts.length - 2; i += si === 2 ? 5 : 3) {
+    const t = unit(s.pts[i - 1]!, s.pts[i + 1]!);
+    side = -side;
+    d += thorn(s.pts[i]!, t, { x: -t.y * side, y: t.x * side }, (si === 0 ? 10 : 7) + rnd() * 8);
+  }
+  return d;
+});
+
+/** Small curling tendrils that spiral off the two main vines. */
+const curl = (x: number, y: number, dir: number, size: number) => {
+  const pts: Pt[] = [];
+  for (let k = 0; k <= 16; k++) {
+    const a = k * 0.5;
+    const r = size * (1 - k / 18);
+    pts.push({ x: x + r * Math.cos(Math.PI / 2 + dir * a), y: y - size + r * Math.sin(Math.PI / 2 + dir * a) });
+  }
+  return smooth(pts);
+};
+const curls = Array.from({ length: 9 }, (_, i) => {
+  const s = strands[i % 2]!;
+  const x = 90 + ((i * 163 + rnd() * 70) % (W - 180));
+  return curl(x, s.y(x), rnd() < 0.5 ? -1 : 1, 10 + rnd() * 14);
+});
+
+/** Leaves, set at an angle to the vine they grow from. */
+const leaves = Array.from({ length: 10 }, (_, i) => {
+  const s = strands[i % 2]!;
+  const x = 60 + ((i * 139 + rnd() * 60) % (W - 120));
+  const t = unit({ x: x - 10, y: s.y(x - 10) }, { x: x + 10, y: s.y(x + 10) });
+  const deg = (Math.atan2(t.y, t.x) * 180) / Math.PI + (i % 2 ? 45 : -45) + (rnd() * 20 - 10);
+  return `translate(${n(x)} ${n(s.y(x))}) rotate(${n(deg)}) scale(${n(0.6 + rnd() * 0.5)})`;
+});
+
+/** One rose seen from above: a wobbling spiral of petals, reused with <use>. */
+const spiral = smooth(
+  Array.from({ length: 46 }, (_, k) => {
+    const a = k * 0.62;
+    const r = 1.2 + k * 0.38 + 1.1 * Math.sin(a * 2.5);
+    return { x: r * Math.cos(a), y: r * Math.sin(a) };
+  }),
+);
+const roses = ([[230, 22], [620, 27], [1010, 23], [1330, 18]] as const).map(
+  ([x, size]) => `translate(${x} ${n(strands[0]!.y(x))}) rotate(${Math.round(rnd() * 360)}) scale(${n(size / 19)})`,
+);
+---
+
+<div class="thorns" aria-hidden="true" data-grow>
+  <svg viewBox="0 0 1440 240" preserveAspectRatio="xMidYMid slice" focusable="false">
+    <defs>
+      <g id="rose"><circle class="rose__bg" r="19"></circle><path class="rose__line" d={spiral}></path></g>
+      <path id="leaf" class="leaf" d="M0 0Q9-9 24 0Q9 9 0 0Z"></path>
+    </defs>
+    {strands.map((s, i) => <path class={`vine v${i}`} d={smooth(s.pts)} pathLength="1"></path>)}
+    <g class="bloom">
+      <path class="vine-hl" d={smooth(strands[0]!.pts)} transform="translate(0 -1.4)"></path>
+      {curls.map((d) => <path class="curl" d={d}></path>)}
+      {thorns.map((d) => <path class="thorn" d={d}></path>)}
+      {leaves.map((t) => <use href="#leaf" transform={t}></use>)}
+      {roses.map((t) => <use class="rose" href="#rose" transform={t}></use>)}
+    </g>
+  </svg>
+</div>

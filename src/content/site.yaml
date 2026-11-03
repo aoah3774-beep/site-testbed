@@ -55,6 +55,7 @@ fx:
   orb: true                      # music section: gyroscope of links
   helix: true                    # On the table: whirl (ring on wide screens, scroll-driven helix elsewhere)
   glow: true                     # ember glow that follows the mouse across cards
+  wind: true # ash and ember motes that scroll and gusts stir
 
 live:
   isLive: false

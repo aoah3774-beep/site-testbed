@@ -27,6 +27,19 @@
 .will-reveal { opacity: 0; transform: translateY(14px); }
 .will-reveal.in { opacity: 1; transform: none; transition: opacity 900ms var(--ease), transform 900ms var(--ease); }
 
+/* thorns: the vines draw themselves once, then the thorns, leaves and roses fade in (class added by reveal.ts) */
+.will-grow .vine { stroke-dashoffset: 1; }
+.will-grow .bloom { opacity: 0; }
+.will-grow.in .vine { stroke-dashoffset: 0; transition: stroke-dashoffset 2.8s var(--ease); }
+.will-grow.in .v1 { transition-delay: 0.3s; }
+.will-grow.in .v2 { transition-delay: 0.6s; }
+.will-grow.in .bloom { opacity: 1; transition: opacity 1.4s var(--ease) 1.2s; }
+@media (prefers-reduced-motion: no-preference) { .rose { animation: breathe 7s ease-in-out infinite; } }
+@keyframes breathe { 50% { opacity: 0.78; } }
+
+/* wind: ash and ember motes over the page (src/fx/wind.ts) */
+.wind { position: fixed; inset: 0; z-index: 45; width: 100%; height: 100%; pointer-events: none; }
+
 /* glitch: one short flash per trigger (JS limits triggers to <3 per second) */
 .glitch-run { animation: glitch 240ms steps(1) 1; }
 @keyframes glitch {
@@ -63,12 +76,13 @@
   background: radial-gradient(16rem circle at var(--mx, 50%) var(--my, 50%), rgb(217 105 42 / 0.13), transparent 65%); }
 [data-fx~='glow'] .card:hover::after { opacity: 1; }
 
-/* orb: gyroscope (src/fx/orb.ts). Outer hoop turns on Y, inner hoop on X, the ring of faces on Y inside them.
-   The box has a fixed size and clips, so nothing can spill over the next section. */
-.orb.is-3d { --w: clamp(6.5rem, 26vw, 9.5rem); position: relative; width: calc(var(--w) * 2.3); height: calc(var(--w) * 2.3); margin-inline: auto; perspective: 1200px; overflow: clip; touch-action: pan-y; }
+/* orb: gyroscope (src/fx/orb.ts). --w is one panel. Four panels form a ring turning on Y (--c); two hoops
+   swing around it, the outer on Y (--a), the inner on X (--b). Both hoops are wider than the ring's corners
+   (1.73w), so nothing pokes through. The box has a fixed size and clips, so nothing spills over the next section. */
+.orb.is-3d { --w: clamp(10rem, 44vw, 20rem); position: relative; width: calc(var(--w) * 1.95); height: calc(var(--w) * 1.95); margin-inline: auto; perspective: 1400px; overflow: clip; touch-action: pan-y; }
 .is-3d .orb__g1, .is-3d .orb__g2, .is-3d .orb__core { display: block; position: absolute; transform-style: preserve-3d; }
 .is-3d .orb__g1 { inset: 0; transform: rotateY(calc(var(--a, 0) * 1deg)); }
-.is-3d .orb__g2 { inset: 12%; transform: rotateX(calc(var(--b, 0) * 1deg)); }
+.is-3d .orb__g2 { inset: 5%; transform: rotateX(calc(var(--b, 0) * 1deg)); }
 .is-3d .orb__core { left: 50%; top: 50%; width: var(--w); height: var(--w); max-width: none; margin: calc(var(--w) / -2) 0 0 calc(var(--w) / -2); transform: rotateY(calc(var(--c, 0) * 1deg)); }
 .is-3d .orb__g1::before, .is-3d .orb__g2::before { content: ''; position: absolute; inset: 0; border: 1px solid rgb(216 169 58 / 0.38); border-radius: 50%; }
 .is-3d .orb__g2::before { border-color: rgb(217 105 42 / 0.38); }
@@ -77,9 +91,11 @@
 .is-3d .orb__face { position: absolute; inset: 0; aspect-ratio: auto; min-height: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
   transform: rotateY(calc(var(--i) * 90deg)) translateZ(calc(var(--w) / 2)); }
 
-/* whirl (src/fx/helix.ts). Stacked: scroll spins the cards around a vertical axis. */
+/* whirl (src/fx/helix.ts). Stacked: cards ride a wheel as you scroll. */
 .table.is-whirl { grid-template-columns: 1fr; max-width: 40rem; margin-inline: auto; gap: 3.5rem; }
 .is-whirl .card { width: min(92%, 26rem); justify-self: center; will-change: transform, opacity; }
-/* whirl, wide landscape: all cards share one grid cell and ride a ring, so the box is as tall as the tallest card */
-.table.is-orbit { --cw: clamp(16rem, 19vw, 20rem); grid-template-columns: 1fr; max-width: none; padding-block: 3.5rem 2rem; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
+/* whirl, wide landscape: all cards share one grid cell and ride a ring, so the box is as tall as the tallest card.
+   A pool of ember light under the ring grounds it. */
+.table.is-orbit { --cw: clamp(16rem, 19vw, 20rem); position: relative; grid-template-columns: 1fr; max-width: none; padding-block: 3.5rem 2.5rem; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
+.table.is-orbit::after { content: ''; position: absolute; left: 50%; bottom: 0; width: 70%; height: 6rem; translate: -50% 0; pointer-events: none; background: radial-gradient(ellipse at center, rgb(217 105 42 / 0.14), transparent 70%); }
 .is-orbit .card { grid-area: 1 / 1; align-self: start; justify-self: center; width: var(--cw); grid-template-columns: 1fr; will-change: transform, opacity; }

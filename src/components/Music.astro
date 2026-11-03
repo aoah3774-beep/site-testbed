@@ -3,29 +3,33 @@ import { site } from '../lib/content';
 import Mark from './Mark.astro';
 
 const social = (label: string) => site.socials.find((s) => s.label.toLowerCase() === label)?.url ?? '';
-// the schema guarantees YouTube and Twitch exist in socials
+// Four panels on the orb. Each has a brand, a one-line caption and one button in the middle.
+// Change a caption or button text here whenever there is something to feature (a new song, a stream time...).
+// The schema guarantees YouTube and Twitch exist in socials.
 const faces = [
-  { name: 'spotify', label: 'Spotify', url: site.links.spotify },
-  { name: 'apple', label: 'Apple Music', url: site.links.appleMusic },
-  { name: 'youtube', label: 'YouTube', url: social('youtube') },
-  { name: 'twitch', label: 'Twitch', url: social('twitch') },
+  { name: 'spotify', label: 'Spotify', caption: 'latest release', cta: 'Listen', url: site.links.spotify },
+  { name: 'apple', label: 'Apple Music', caption: 'latest release', cta: 'Listen', url: site.links.appleMusic },
+  { name: 'youtube', label: 'YouTube', caption: 'videos', cta: 'Watch', url: social('youtube') },
+  { name: 'twitch', label: 'Twitch', caption: 'live streams', cta: 'Tune in', url: social('twitch') },
 ] as const;
 ---
 
-<section class="section" id="music" aria-labelledby="music-h">
-  <h2 id="music-h" data-glitch>music</h2>
-  <p class="label">listen anywhere.</p>
-  <!-- plain 2x2 link grid without JS or with reduced motion; src/fx/orb.ts turns it into a gyroscope -->
+<section class="section section--bare" id="music" aria-label="music">
+  <!-- plain 2x2 grid without JS or with reduced motion; src/fx/orb.ts turns it into a gyroscope -->
   <div class="orb" data-orb>
     <div class="orb__g1">
       <div class="orb__g2">
         <div class="orb__core">
           {
             faces.map((f, i) => (
-              <a class="orb__face" href={f.url} target="_blank" rel="noopener noreferrer" style={`--i:${i}`} aria-label={f.label}>
-                <Mark name={f.name} />
-                <span>{f.label}</span>
-              </a>
+              <article class="orb__face" style={`--i:${i}`}>
+                <div class="orb__brand">
+                  <Mark name={f.name} />
+                  <p class="orb__name">{f.label}</p>
+                </div>
+                <a class="btn btn--primary" href={f.url} target="_blank" rel="noopener noreferrer" aria-label={`${f.cta} on ${f.label}`}>{f.cta}</a>
+                <p class="label">{f.caption}</p>
+              </article>
             ))
           }
         </div>

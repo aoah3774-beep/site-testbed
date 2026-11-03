@@ -9,6 +9,9 @@
   --gold: #d8a93a;
   --line: rgb(138 133 128 / 0.25);
 
+  /* gilded molding: used as a border-image on picture frames (cards, panels, dialog) */
+  --gilt: linear-gradient(135deg, #d9b45a, #7a5e22 22%, #4a3711 38%, #bf9a40 54%, #6e5319 72%, #c9a64e);
+
   --font-display: 'Cormorant Garamond', 'IM Fell English', Georgia, serif;
   --font-ui: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 

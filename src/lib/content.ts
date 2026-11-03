@@ -74,6 +74,7 @@ const schema = z.strictObject({
     orb: z.boolean(),
     helix: z.boolean(),
     glow: z.boolean(),
+    wind: z.boolean(),
   }),
   live: z.strictObject({ isLive: z.boolean(), url: optUrl, nextStream: optWhen }),
   onTheTable: z.array(

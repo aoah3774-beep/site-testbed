@@ -9,6 +9,10 @@
   --gold: #d8a93a;
   --line: rgb(138 133 128 / 0.25);
 
+  /* solid section bands (#table and #packs in sections.css) */
+  --band-table: #070605; /* near-black */
+  --band-ash: #231f1c; /* washed-out brownish gray, lighter than --soot */
+
   --font-display: 'Cormorant Garamond', 'IM Fell English', Georgia, serif;
   --font-ui: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 

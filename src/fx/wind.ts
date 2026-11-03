@@ -1,7 +1,8 @@
 // Ash and ember motes drifting over the page below the hero (the hero has its own embers). Scrolling stirs them
 // into streaks with a little parallax, and every so often a gust sweeps through. Near "On the table" a few more
-// appear. One fixed 2D canvas, DPR capped, idle while the hero fills the screen or the tab is hidden.
-type Mote = { x: number; y: number; z: number; r: number; color: string; ph: number; extra: boolean };
+// appear. Calm and gritty: few motes, soft alpha, each with its own streak length, and about 40% drawn broken
+// (dashed) like ash flecks. One fixed 2D canvas, DPR capped, idle while the hero fills the screen or the tab is hidden.
+type Mote = { x: number; y: number; z: number; r: number; color: string; ph: number; extra: boolean; len: number; dash: number[] };
 const TAU = Math.PI * 2;
 const COLORS = ['#d9692a', '#8a8580', '#e8dfd0', '#9c1f1f'];
 
@@ -16,7 +17,7 @@ export default function init() {
   const hero = document.querySelector<HTMLElement>('[data-hero]');
   const table = document.querySelector<HTMLElement>('#table');
   const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-  const count = matchMedia('(max-width: 767px)').matches ? 26 : 56;
+  const count = matchMedia('(max-width: 767px)').matches ? 18 : 40;
   let w = 0;
   let h = 0;
   const resize = () => {
@@ -37,6 +38,8 @@ export default function init() {
     color: COLORS[i % COLORS.length]!,
     ph: Math.random() * TAU,
     extra: i >= count * 0.55, // only shown near "On the table"
+    len: 0.6 + Math.random() * 0.9, // streak-length factor
+    dash: Math.random() < 0.4 ? [1 + Math.random() * 4, 2 + Math.random() * 6] : [], // broken fleck, or a solid streak
   }));
 
   let presenceWant = hero ? 0 : 1; // 0 while the hero fills the screen
@@ -70,7 +73,7 @@ export default function init() {
     }
     const gp = (t - gustAt) / gustLen;
     const gust = gp >= 0 && gp < 1 ? Math.sin(gp * Math.PI) ** 2 : 0;
-    const wind = (0.012 + gust * 0.09 + Math.min(Math.abs(scrollV), 3) * 0.1) * (1 + boost * 0.6);
+    const wind = (0.012 + gust * 0.06 + Math.min(Math.abs(scrollV), 3) * 0.1) * (1 + boost * 0.35);
 
     ctx.lineCap = 'round';
     for (const m of motes) {
@@ -83,14 +86,15 @@ export default function init() {
       if (m.y < -10) [m.x, m.y] = [Math.random() * w, h + 10];
       else if (m.y > h + 10) [m.x, m.y] = [Math.random() * w, -10];
 
-      const alpha = presence * (m.extra ? boost : 1) * (0.25 + 0.5 * m.z);
+      const alpha = presence * (m.extra ? boost : 1) * (0.18 + 0.32 * m.z);
       if (alpha < 0.02) continue;
       ctx.globalAlpha = alpha;
       ctx.strokeStyle = m.color;
-      ctx.lineWidth = m.r * m.z * 1.6 + 0.4;
+      ctx.lineWidth = m.r * m.z * 1.3 + 0.3;
+      ctx.setLineDash(m.dash);
       ctx.beginPath();
       ctx.moveTo(m.x, m.y);
-      ctx.lineTo(m.x - vx * 55, m.y - vy * 55); // streak length follows speed
+      ctx.lineTo(m.x - vx * 55 * m.len, m.y - vy * 55 * m.len); // streak length follows speed
       ctx.stroke();
     }
     raf = requestAnimationFrame(frame);

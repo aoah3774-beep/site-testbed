@@ -46,20 +46,19 @@ const external = packs ? {} : { target: '_blank', rel: 'noopener noreferrer' };
     </h1>
     <p class="hero__tag">{brand.tagline}</p>
     <div class="emblems">
-      <p class="label">listen</p>
-      <div class="row row--listen" data-beam>
+      <div class="row row--listen" data-beam role="group" aria-label="Listen">
         <span class="beam" aria-hidden="true"></span>
         <ul>{listen.map((l, i) => <Emblem {...l} i={i} />)}</ul>
       </div>
-      <p class="label">follow</p>
-      <div class="row row--follow" data-beam>
+      <span class="emblems__rule" aria-hidden="true"></span>
+      <div class="row row--follow" data-beam role="group" aria-label="Follow">
         <span class="beam" aria-hidden="true"></span>
         <ul>{socials.map((s, i) => <Emblem name={s.mark} label={`Follow on ${s.label}`} url={s.url} i={i + 2} />)}</ul>
       </div>
     </div>
     <nav class="hero__links" aria-label="main">
-      <a class="btn" href="#work" data-decode data-magnet>Work with me</a>
-      <a class="btn" href={shop} {...external} data-decode data-magnet>Shop</a>
+      <a class="btn" href="#work" aria-label="Collab, work with me" data-decode data-magnet>Collab</a>
+      <a class="btn" href={shop} {...external} aria-label="Shop sound packs" data-decode data-magnet>Shop</a>
     </nav>
   </div>
   <Thorns />

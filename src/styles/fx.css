@@ -28,7 +28,7 @@
    while waiting, and nothing is held afterwards (JS can still move the emblems). */
 @media (prefers-reduced-motion: no-preference) {
   [data-fx~='intro'] .ch { animation: rise 1.1s var(--soft) backwards; animation-delay: calc(0.15s + var(--i) * 55ms); }
-  [data-fx~='intro'] :is(.hero__tag, .emblems > .label, .hero__links) { animation: fade-up 1.1s var(--soft) 0.8s backwards; }
+  [data-fx~='intro'] :is(.hero__tag, .emblems__rule, .hero__links) { animation: fade-up 1.1s var(--soft) 0.8s backwards; }
   [data-fx~='intro'] .row li { animation: fade-up 1.1s var(--soft) backwards; animation-delay: calc(0.9s + var(--i) * 90ms); }
   [data-fx~='intro'] .embers { animation: fade-in 2.4s ease 0.8s backwards; }
   [data-fx~='intro'] .thorns .vine { animation: draw 2.6s var(--soft) backwards; }

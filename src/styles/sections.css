@@ -17,6 +17,8 @@ main > .section:nth-of-type(even)::before {
     radial-gradient(28rem 20rem at 0 100%, rgb(217 105 42 / 0.07), transparent 70%);
 }
 /* solid bands (#table, #packs): ID selectors beat the two rules above, so the same full-bleed ::before becomes a flat color */
+/* #table and #packs sit just above the global grain (z-index 50) so their cards are never grainy; fx.css gives each its own grain behind its content */
+#table, #packs { z-index: 51; }
 /* #table: soft top edge so the thorns meet no seam; the bottom edge is hard */
 #table::before {
   background: var(--band-table);
@@ -94,7 +96,10 @@ main > .section:nth-of-type(even)::before {
 
 /* ---------- sound packs: a solid ash band (see #packs::before above); a beam of light sweeps the cover on hover, focus or touch ---------- */
 .packs { list-style: none; margin: 0 0 2rem; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); gap: 1.25rem; }
-.pack { display: grid; gap: 0.5rem; text-decoration: none; }
+/* each pack is a flat neutral block like the beat cards: cover flush at the top, text padded below */
+.pack { display: grid; gap: 0; background: var(--soot); border: 1px solid rgb(232 223 208 / 0.07); box-shadow: 0 30px 50px -30px rgb(0 0 0 / 0.95); text-decoration: none; }
+.pack__title { padding: 0.9rem 1rem 0.3rem; }
+.pack > .label { padding: 0 1rem 1rem; }
 .pack img { width: 100%; aspect-ratio: 1; object-fit: cover; scale: 1.16; } /* oversize so reveal.ts can drift it inside its frame */
 .pack__title { font-size: 1.3rem; line-height: 1.1; text-transform: lowercase; }
 .pack:hover .pack__title { color: var(--ember); }
@@ -127,7 +132,7 @@ main > .section:nth-of-type(even)::before {
 .player__btn::before { content: ''; width: 0; height: 0; margin-left: 4px; border-left: 12px solid currentColor; border-block: 8px solid transparent; }
 .player__btn[aria-pressed='true']::before { width: 12px; height: 16px; margin: 0; border: 0; border-inline: 4px solid currentColor; }
 .player__wave { flex: 1; width: 100%; min-width: 0; height: 3rem; }
-.mute { position: fixed; left: 1rem; bottom: 1rem; z-index: 40; min-height: 2.5rem; padding: 0.4rem 0.8rem; font: 0.75rem var(--font-ui); color: var(--ash); background: var(--soot); border: 1px solid var(--line); cursor: pointer; }
+.mute { position: fixed; left: 1rem; bottom: 1rem; z-index: 55; min-height: 2.5rem; padding: 0.4rem 0.8rem; font: 0.75rem var(--font-ui); color: var(--ash); background: var(--soot); border: 1px solid var(--line); cursor: pointer; }
 .mute:hover { color: var(--ember); }
 .mute[hidden] { display: none; }
 
@@ -165,7 +170,7 @@ main > .section:nth-of-type(even)::before {
 /* ---------- section dots (desktop) ---------- */
 .dots { display: none; }
 @media (min-width: 64rem) {
-  .dots { position: fixed; right: 1.5rem; top: 50%; translate: 0 -50%; z-index: 40; display: grid; gap: 0.9rem; }
+  .dots { position: fixed; right: 1.5rem; top: 50%; translate: 0 -50%; z-index: 55; display: grid; gap: 0.9rem; }
   .dots a { display: block; width: 0.7rem; height: 0.7rem; border: 1px solid var(--ash); border-radius: 50%; transition: background-color 0.4s var(--ease), border-color 0.4s var(--ease); }
   .dots a[aria-current='true'] { background: var(--ember); border-color: var(--ember); }
 }

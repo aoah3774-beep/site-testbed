@@ -4,7 +4,8 @@
 //    breathes, and a glint sweeps each cover as its card swings past. Drag it: on release it settles on the nearest card (a flick
 //    carries it a little further). Hover or touch pauses the glide; keyboard focus brings a card to the front.
 //  - everything else: cards stay stacked and ride a wheel as you scroll; ScrollTrigger's scrub smooths the scroll position.
-// Cards also lean a few degrees toward the mouse. Depth is shown with opacity, scale and a dark veil (--dim), never blur.
+// Cards also lean a few degrees toward the mouse. Depth is shown with scale and a dark veil (--dim), never blur or opacity:
+// cards stay fully opaque so the section's grain never shows through them.
 // Tune: DWELL / TRAVEL / RISE / YAW / ROLL / FLOAT / BREATHE / FAR (ring), DEPTH / TILT / TWIST / SWAY (stack), LEAN (mouse).
 import { gsap, SETTLE, SOFT, clamp, whileVisible } from './motion';
 
@@ -115,8 +116,8 @@ function orbit(table: HTMLElement, cards: HTMLElement[]): Dispose {
       const scale = FAR + (1 - FAR) * front ** 1.2;
       const r = R * open.v;
       el.style.transform = `perspective(1600px) translate3d(${(r * s).toFixed(1)}px,${((RISE * (c - 1)) / 2 + bob).toFixed(1)}px,${(r * (c - 1)).toFixed(1)}px) rotateY(${(-YAW * s).toFixed(3)}rad) rotateZ(${(ROLL * s).toFixed(3)}rad) scale(${scale.toFixed(3)}) rotateX(${t.x.toFixed(2)}deg) rotateY(${t.y.toFixed(2)}deg)`;
-      el.style.opacity = ((0.3 + 0.7 * front ** 1.4) * (0.15 + 0.85 * open.v)).toFixed(2);
-      el.style.setProperty('--dim', ((1 - front) * 0.5).toFixed(2));
+      const bright = (0.3 + 0.7 * front ** 1.4) * (0.15 + 0.85 * open.v) * (1 - (1 - front) * 0.5);
+      el.style.setProperty('--dim', (1 - bright).toFixed(2)); // depth is a dark veil, never transparency
       el.style.setProperty('--shine', `${(50 - s * 90).toFixed(1)}%`); // the glint travels across the cover as the card swings
       el.style.zIndex = String(Math.round(front * 100));
       el.style.pointerEvents = c < -0.7 ? 'none' : ''; // the far card can't be hit through the front one
@@ -257,8 +258,7 @@ function stack(table: HTMLElement, cards: HTMLElement[]): Dispose {
       const side = i % 2 ? 1 : -1;
       const t = tilt[i]!;
       el.style.transform = `perspective(1000px) translate3d(${(side * d * SWAY).toFixed(1)}px,0,${(-DEPTH * ad * ad).toFixed(1)}px) rotateX(${(-d * TILT).toFixed(3)}rad) rotateY(${(-side * d * TWIST).toFixed(3)}rad) rotateX(${t.x.toFixed(2)}deg) rotateY(${t.y.toFixed(2)}deg)`;
-      el.style.opacity = (1 - 0.5 * ad * ad).toFixed(2);
-      el.style.setProperty('--dim', (0.45 * ad * ad).toFixed(2));
+      el.style.setProperty('--dim', (1 - (1 - 0.5 * ad * ad) * (1 - 0.45 * ad * ad)).toFixed(2));
       el.style.zIndex = String(Math.round((1 - ad) * 50));
     });
   };

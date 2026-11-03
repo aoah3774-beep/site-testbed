@@ -4,8 +4,12 @@
 /* grain: one pre-rendered tile, stepped animation, never computed live */
 .grain { position: fixed; inset: -50%; z-index: 50; pointer-events: none; background: url('/grain.png'); opacity: 0.07; will-change: transform; }
 /* a slow, smooth drift (no stepping, no jumps, nothing that flickers): the texture stays, the motion is barely perceptible */
-@media (prefers-reduced-motion: no-preference) { .grain { animation: grain 16s ease-in-out infinite alternate; } }
-@keyframes grain { from { transform: translate(-8%, -6%); } to { transform: translate(8%, 6%); } }
+@media (prefers-reduced-motion: no-preference) { .grain { animation: grain 40s ease-in-out infinite alternate; } }
+@keyframes grain { from { transform: translate(-2%, -1.5%); } to { transform: translate(2%, 1.5%); } }
+
+/* "on the table" and "sound packs" lift above the global grain so their cards stay clean (z-index in sections.css); each carries
+   its own still grain instead, behind its content (above the band, below the cards and text) */
+[data-fx~='grain'] :is(#table, #packs)::after { content: ''; position: absolute; z-index: -1; top: 0; bottom: 0; left: 50%; width: 100vw; translate: -50% 0; pointer-events: none; background: url('/grain.png'); opacity: 0.07; }
 
 /* raw covers: dark, gritty and desaturated, blooming to color on hover/tap, misregistered edges */
 [data-fx~='grain'] .raw img { filter: grayscale(0.7) contrast(1.25) brightness(0.78); box-shadow: 2px 0 0 rgb(156 31 31 / 0.55), -2px 0 0 rgb(217 105 42 / 0.4); transition: filter var(--slow) var(--ease), box-shadow var(--slow) var(--ease); }
@@ -42,7 +46,7 @@
 @keyframes breathe { 50% { opacity: 0.78; } }
 
 /* wind: ash and ember motes over the page (src/fx/wind.ts) */
-.wind { position: fixed; inset: 0; z-index: 45; width: 100%; height: 100%; pointer-events: none; }
+.wind { position: fixed; inset: 0; z-index: 52; width: 100%; height: 100%; pointer-events: none; }
 
 /* glitch: one short flash per trigger (JS limits triggers to <3 per second) */
 .glitch-run { animation: glitch 240ms steps(1) 1; }
@@ -72,7 +76,7 @@
 .card::after { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity 0.5s var(--ease);
   background: radial-gradient(16rem circle at var(--mx, 50%) var(--my, 50%), rgb(217 105 42 / 0.13), transparent 65%); }
 [data-fx~='glow'] .card:hover::after { opacity: 1; }
-.card::before { content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: var(--void); opacity: var(--dim, 0); }
+.card::before { content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: var(--band-table); opacity: var(--dim, 0); }
 
 /* whirl (src/fx/helix.ts). Stacked: cards ride a wheel as you scroll. */
 .table.is-whirl { grid-template-columns: 1fr; max-width: 40rem; margin-inline: auto; gap: 3.5rem; }

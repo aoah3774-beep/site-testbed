@@ -17,7 +17,8 @@
     "@fontsource/ibm-plex-mono": "^5.0.0",
     "astro": "^6.0.0",
     "gsap": "^3.15.0",
-    "yaml": "^2.0.0"
+    "yaml": "^2.0.0",
+    "gsap": "^3.13.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
